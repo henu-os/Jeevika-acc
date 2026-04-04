@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Transaction Type Setup — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <style>
+        body { background: #808080; }
+        .setup-container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: #fff;
+            border: 1px solid #999;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.3);
+            display: flex;
+            height: 80vh;
+        }
+        .list-section { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #ccc; }
+        .controls-section { width: 120px; padding: 10px; background: #f4f4f4; display: flex; flex-direction: column; gap: 8px; }
+        
+        .list-header { background: #fff; padding: 4px 8px; border-bottom: 1px solid #333; font-size: 11px; font-weight: 700; display: flex; }
+        .list-header span { border-right: 1px solid #ccc; padding: 0 4px; }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .data-table th { background: #0056b3; color: #fff; text-align: left; padding: 4px 8px; font-weight: 500; }
+        .data-table td { border: 1px solid #eee; padding: 4px 8px; }
+        .data-table tr:hover { background: #f0f7ff; cursor: pointer; }
+        .data-table tr.selected { background: #0056b3; color: #fff; }
+
+        .btn-legacy {
+            width: 100%;
+            padding: 6px;
+            background: #e1e1e1;
+            border: 1px solid #999;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-legacy:hover { background: #dcdcdc; }
+
+        /* Popup Mock for Add/Edit */
+        .ny-container {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; background: #fff; border: 1px solid #999; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: none; z-index: 100;
+        }
+        .ny-header { background: #fff; padding: 8px 12px; border-bottom: 1px solid #eee; font-weight: 700; font-size: 13px; }
+        .ny-body { padding: 40px 20px; text-align: center; }
+        .form-row { margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+        .form-row label { font-size: 13px; text-align: right; width: 140px; }
+        .form-row select, .form-row input { flex: 1; padding: 4px; border: 1px solid #999; }
+        .ny-footer { background: #f4f4f4; padding: 15px; display: flex; justify-content: center; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="setup-container">
+    <div class="list-section">
+        <div style="background: #fff; padding: 4px; border-bottom: 1px solid #999; font-size: 12px; font-weight: 700;">
+            <img src="https://cdn-icons-png.flaticon.com/512/2622/2622112.png" width="16"> Transaction Type Add
+        </div>
+        <div style="flex:1; overflow:auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width:10%">S.</th>
+                        <th style="width:25%">Id/Category</th>
+                        <th style="width:25%">Name</th>
+                        <th style="width:25%">Short Name</th>
+                        <th style="width:15%">Type</th>
+                    </tr>
+                </thead>
+                <tbody id="type_tbody">
+                    <!-- Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="controls-section">
+        <button class="btn-legacy" onclick="openForm()">Add</button>
+        <button class="btn-legacy" onclick="editSelected()">Alter</button>
+        <button class="btn-legacy" onclick="deleteSelected()">Delete</button>
+        <div style="flex:1"></div>
+        <button class="btn-legacy" onclick="location.href='utilities.html'">Exit</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="ny-container" id="form_modal">
+    <div class="ny-header">Transaction Type Add</div>
+    <div class="ny-body">
+        <input type="hidden" id="edit_id">
+        <div class="form-row">
+            <label>Select Transaction Type</label>
+            <select id="main_type">
+                <option value="Payment">Payment</option>
+                <option value="Receipt">Receipt</option>
+                <option value="Contra">Contra</option>
+                <option value="Journal">Journal</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label>Transaction Name</label>
+            <input type="text" id="type_name">
+        </div>
+        <div class="form-row">
+            <label>Transaction Short Name</label>
+            <input type="text" id="short_name" maxlength="5">
+        </div>
+    </div>
+    <div class="ny-footer">
+        <button class="btn-legacy" style="padding: 4px 20px" onclick="saveForm()">Save</button>
+        <button class="btn-legacy" style="padding: 4px 20px" onclick="closeForm()">Exit</button>
+    </div>
+</div>
+
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script>
+    let selectedId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderList();
+    });
+
+    function renderList() {
+        const list = VoucherTypeMaster.getAll();
+        const tbody = document.getElementById('type_tbody');
+        tbody.innerHTML = list.map((item, idx) => `
+            <tr onclick="selectRow(${item.id}, this)" class="${selectedId == item.id ? 'selected' : ''}">
+                <td>${idx + 1}</td>
+                <td>${item.type}</td>
+                <td>${item.name}</td>
+                <td>${item.shortName}</td>
+                <td style="text-align:center">${item.category || 'S'}</td>
+            </tr>
+        `).join('');
+    }
+
+    function selectRow(id, el) {
+        selectedId = id;
+        document.querySelectorAll('#type_tbody tr').forEach(r => r.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    function openForm(editData = null) {
+        const modal = document.getElementById('form_modal');
+        const eId = document.getElementById('edit_id');
+        const mType = document.getElementById('main_type');
+        const tName = document.getElementById('type_name');
+        const sName = document.getElementById('short_name');
+
+        if (editData) {
+            eId.value = editData.id;
+            mType.value = editData.type;
+            tName.value = editData.name;
+            sName.value = editData.shortName;
+            if (editData.system) {
+                showToast('System types cannot be modified', 'warning');
+                return;
+            }
+        } else {
+            eId.value = "";
+            tName.value = "";
+            sName.value = "";
+        }
+        modal.style.display = 'block';
+    }
+
+    function closeForm() {
+        document.getElementById('form_modal').style.display = 'none';
+    }
+
+    function saveForm() {
+        const data = {
+            type: document.getElementById('main_type').value,
+            name: document.getElementById('type_name').value.trim(),
+            shortName: document.getElementById('short_name').value.trim(),
+        };
+
+        if (!data.name || !data.shortName) {
+            showToast('All fields are mandatory', 'warning');
+            return;
+        }
+
+        const id = document.getElementById('edit_id').value;
+        if (id) {
+            VoucherTypeMaster.update(id, data);
+            showToast('Transaction Type updated', 'success');
+        } else {
+            // Check for duplicate short name
+            const list = VoucherTypeMaster.getAll();
+            if (list.find(l => l.shortName.toLowerCase() === data.shortName.toLowerCase())) {
+                showToast('Short Name already exists', 'error');
+                return;
+            }
+            VoucherTypeMaster.add(data);
+            showToast('New Transaction Type added', 'success');
+        }
+        renderList();
+        closeForm();
+    }
+
+    function editSelected() {
+        if (!selectedId) return showToast('Select a row first', 'warning');
+        const item = VoucherTypeMaster.getAll().find(i => i.id == selectedId);
+        openForm(item);
+    }
+
+    function deleteSelected() {
+        if (!selectedId) return showToast('Select a row first', 'warning');
+        if (!confirm('Are you sure you want to delete this transaction type?')) return;
+        
+        const ok = VoucherTypeMaster.delete(selectedId);
+        if (ok) {
+            showToast('Deleted successfully', 'info');
+            selectedId = null;
+            renderList();
+        } else {
+            showToast('Cannot delete system-defined type', 'error');
+        }
+    }
+</script>
+
+</body>
+</html>

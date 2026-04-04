@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Quick Note — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <style>
+        .note-card { padding:15px; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:15px; background: white; transition: box-shadow 0.2s; }
+        .note-card:hover { box-shadow: var(--shadow-sm); border-color: var(--primary); }
+        .note-header { display:flex; justify-content:space-between; margin-bottom:8px; align-items:center; }
+        .note-title { font-size:14px; font-weight:700; color:var(--primary); }
+        .note-date { font-size:12px; color:var(--text-muted); }
+        .note-text { font-size:14px; color:var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
+        .note-footer { display:flex; justify-content:space-between; align-items:center; border-top: 1px solid #eee; padding-top: 10px; }
+        .note-tag { font-size: 11px; padding: 3px 8px; background: #e3f2fd; color: #1976d2; border-radius: 12px; font-weight: 600; }
+        .note-actions button { background: none; border: none; color: var(--danger); cursor: pointer; padding: 4px; border-radius: 4px; }
+        .note-actions button:hover { background: #ffebee; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+        <nav class="sidebar-nav">
+            <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+            <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+            <div class="nav-item"><a href="transactions.html" class="active"><span class="icon">💰</span> Transactions</a></div>
+            <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <div><div class="page-title">Quick Note</div><div class="breadcrumb">Transactions / Quick Note</div></div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="page-header"><div><h1>Quick Note</h1><p>Fast memo entry for day-to-day reminders and temporary adjustments</p></div></div>
+            
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                <div class="card">
+                    <h3 style="margin-bottom: 20px; font-weight: 700;">Create New Note</h3>
+                    <div class="form-group">
+                        <label class="form-label">Note Title / Account Head</label>
+                        <input type="text" id="noteTitle" class="form-input" placeholder="e.g. Pending maintenance fee from vendor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="text" id="noteDate" class="form-input date-picker">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Note Description</label>
+                        <textarea id="noteText" class="form-input" rows="6" placeholder="Type your note here..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Attach to Member</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="attachMem" onchange="document.getElementById('memSelectGroup').style.display=this.checked?'block':'none'">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group" id="memSelectGroup" style="display:none">
+                        <label class="form-label">Select Member</label>
+                        <select id="memSelect" class="form-input select2">
+                            <option value="">Select Member</option>
+                            <option value="M001">M001 — Aman Salvi</option>
+                            <option value="M002">M002 — Priya Sharma</option>
+                            <option value="M003">M003 — Rahul Verma</option>
+                        </select>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn-primary" onclick="saveNote()">Save Note</button>
+                        <button class="btn-secondary" onclick="clearForm()">Clear</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-weight: 700;">Recent Notes</h3>
+                        <input type="text" id="searchNotes" class="form-input" placeholder="Search notes..." style="width: 200px; padding: 5px 10px;" oninput="renderNotes()">
+                    </div>
+                    <div id="notesContainer" style="display:flex;flex-direction:column;">
+                        <!-- Notes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/transactions-brain.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({ width: '100%' });
+            flatpickr(".date-picker", { dateFormat: "d/m/Y", defaultDate: "today" });
+            renderNotes();
+        });
+
+        function clearForm() {
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteText').value = '';
+            document.getElementById('attachMem').checked = false;
+            document.getElementById('memSelectGroup').style.display = 'none';
+            $('#memSelect').val('').trigger('change');
+            document.getElementById('noteDate')._flatpickr.setDate(new Date());
+        }
+
+        function saveNote() {
+            const title = document.getElementById('noteTitle').value.trim();
+            const text = document.getElementById('noteText').value.trim();
+            const date = document.getElementById('noteDate').value;
+            const attachMem = document.getElementById('attachMem').checked;
+            const memberCode = attachMem ? document.getElementById('memSelect').value : null;
+
+            if(!title || !text) {
+                showToast('Please enter title and note description', 'error');
+                return;
+            }
+
+            const note = {
+                id: 'NT-' + Date.now(),
+                title: title,
+                text: text,
+                date: date,
+                memberCode: memberCode
+            };
+
+            TransactionsBrain.saveQuickNote(note);
+            showToast('Note saved successfully');
+            clearForm();
+            renderNotes();
+        }
+
+        function deleteNote(id) {
+            if(confirm('Are you sure you want to delete this note?')) {
+                TransactionsBrain.delete(TRANS_DB.QUICK_NOTES, [id], 'id');
+                showToast('Note deleted');
+                renderNotes();
+            }
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('notesContainer');
+            const search = document.getElementById('searchNotes').value.toLowerCase();
+            let notes = TransactionsBrain.getQuickNotes() || [];
+            
+            // Sort by latest first
+            notes.reverse();
+
+            if (search) {
+                notes = notes.filter(n => n.title.toLowerCase().includes(search) || n.text.toLowerCase().includes(search));
+            }
+
+            if(notes.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px;">No notes found</div>';
+                return;
+            }
+
+            container.innerHTML = notes.map(n => `
+                <div class="note-card">
+                    <div class="note-header">
+                        <span class="note-title">${n.title}</span>
+                        <span class="note-date">${n.date}</span>
+                    </div>
+                    <div class="note-text">${n.text.replace(/\n/g, '<br>')}</div>
+                    <div class="note-footer">
+                        <div>
+                            ${n.memberCode ? `<span class="note-tag">Member: ${n.memberCode}</span>` : '<span class="note-tag" style="background:#f5f5f5; color:#666;">General</span>'}
+                        </div>
+                        <div class="note-actions">
+                            <button onclick="deleteNote('${n.id}')" title="Delete Note">🗑️ Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

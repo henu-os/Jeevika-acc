@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>New Year Creation — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body { background: #808080; }
+        .ny-container {
+            max-width: 450px;
+            margin: 50px auto;
+            background: #fff;
+            border: 1px solid #999;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .ny-header {
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        .ny-header span {
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ny-body {
+            padding: 24px;
+        }
+        .warning-red {
+            color: #d00;
+            font-weight: 800;
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .form-row label { font-size: 14px; min-width: 40px; }
+        .ny-input {
+            width: 110px;
+            padding: 4px 8px;
+            border: 1px solid #0056b3;
+            text-align: center;
+            font-size: 14px;
+        }
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-right: 40px;
+        }
+        .toggle-row label { font-size: 13px; font-weight: 500; }
+        .toggle-row select {
+            width: 100px;
+            padding: 2px;
+            border: 1px solid #999;
+            font-size: 13px;
+        }
+        .ny-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: #f4f4f4;
+            border-top: 1px solid #ddd;
+        }
+        .btn-ny {
+            min-width: 100px;
+            padding: 6px 15px;
+            border: 1px solid #999;
+            background: #e1e1e1;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-ny:hover { background: #d4d4d4; }
+        
+        .status-bar {
+            background: #ddd;
+            height: 25px;
+            border-top: 1px solid #999;
+            padding: 2px 10px;
+            font-size: 11px;
+            color: #444;
+            display: flex;
+            align-items: center;
+        }
+        
+        #overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ny-container">
+    <div class="ny-header">
+        <span><img src="https://cdn-icons-png.flaticon.com/512/2622/2622112.png" width="18"> New Year Creation</span>
+        <button onclick="location.href='utilities.html'" style="background:none;border:none;cursor:pointer;">&times;</button>
+    </div>
+
+    <div class="ny-body">
+        <div class="warning-red">Please Use Rebuild before use this option</div>
+
+        <div class="form-row">
+            <label>From</label>
+            <input type="text" class="ny-input" id="from_date" value="01/04/2026">
+            <label>To</label>
+            <input type="text" class="ny-input" id="to_date" value="31/03/2027">
+        </div>
+
+        <div class="toggle-row">
+            <label>C/f Member Balance</label>
+            <select id="cf_member">
+                <option value="no">No</option>
+                <option value="yes" selected>Yes</option>
+            </select>
+        </div>
+
+        <div class="toggle-row">
+            <label>C/f Account Balance</label>
+            <select id="cf_account">
+                <option value="no" selected>No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div id="overlay">
+            <div id="status_text" style="font-weight:700; margin-bottom:8px;">Initializing...</div>
+            <div style="width:80%; height:12px; background:#eee; border-radius:6px; overflow:hidden;">
+                <div id="status_bar" style="width:0%; height:100%; background:#0056b3; transition:width 0.3s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ny-footer">
+        <button class="btn-ny" onclick="executeNewYear()">Ok</button>
+        <button class="btn-ny" onclick="location.href='utilities.html'">Cancel</button>
+    </div>
+
+    <div class="status-bar" id="bottom_status">Ready</div>
+</div>
+
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/utility-brain.js"></script>
+<script>
+    async function executeNewYear() {
+        if (!confirm('CRITICAL: This will create a NEW financial year, carry forward balances, and RESET all transactions for the current view. Ensure you have backed up your data. Proceed?')) {
+            return;
+        }
+
+        const params = {
+            fromDate: document.getElementById('from_date').value,
+            toDate: document.getElementById('to_date').value,
+            cfMember: document.getElementById('cf_member').value === 'yes',
+            cfAccount: document.getElementById('cf_account').value === 'yes'
+        };
+
+        const overlay = document.getElementById('overlay');
+        const sBar = document.getElementById('status_bar');
+        const sText = document.getElementById('status_text');
+        const bStatus = document.getElementById('bottom_status');
+
+        overlay.style.display = 'flex';
+        bStatus.textContent = 'Processing Year-End...';
+
+        try {
+            await UtilityBrain.createNewYear(params, (status, percent) => {
+                sText.textContent = status;
+                sBar.style.width = percent + '%';
+                bStatus.textContent = status;
+            });
+            showToast('New Financial Year Created!', 'success');
+            setTimeout(() => location.href = 'utilities.html', 2000);
+        } catch (err) {
+            showToast('Sync Error: ' + err.message, 'error');
+            overlay.style.display = 'none';
+            bStatus.textContent = 'Error occurred';
+        }
+    }
+</script>
+
+</body>
+</html>

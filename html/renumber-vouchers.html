@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Renumber Vouchers — Jeevika Accounting</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">J</div>
+    <div class="logo-text"><h2>jeevika</h2><span>accounting</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+    <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+    <div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+    <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+    <div class="nav-item"><a href="utilities.html" class="active"><span class="icon">🔧</span> Utilities</a></div>
+  </nav>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div><div class="page-title">Renumber Vouchers</div><div class="breadcrumb">Home / Utilities / Renumber</div></div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="page-header">
+      <div>
+        <h1>Transaction Renumber</h1>
+        <p>Re-sequence voucher numbers chronologically to satisfy audit and compliance requirements.</p>
+      </div>
+      <button class="btn-secondary" onclick="location.href='utilities.html'">Back to Utilities</button>
+    </div>
+
+    <div class="card" style="max-width:550px; margin: 0 auto; padding: 30px;">
+      <h3 style="font-weight:700; color:var(--primary); text-align:center; font-size: 20px; margin-bottom:25px;">Transaction Renumber</h3>
+      
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <div class="form-group" style="display: flex; align-items: center; justify-content: space-between;">
+          <label class="form-label" style="margin:0; width: 180px; font-weight:600;">Transaction Type</label>
+          <select class="form-input" id="trans_type" style="flex: 1;">
+            <option value="payment">Payment</option>
+            <option value="receipt">Receipt</option>
+            <option value="contra">Contra</option>
+            <option value="journal">Journal</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; justify-content: space-between;">
+          <label class="form-label" style="margin:0; width: 180px; font-weight:600;">Sub Transaction Type</label>
+          <select class="form-input" id="sub_trans_type" style="flex: 1;">
+            <option value="all">All (Auto-Detect Cash/Bank)</option>
+            <option value="cash">Cash Only</option>
+            <option value="bank">Bank Only</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; justify-content: space-between;">
+          <label class="form-label" style="margin:0; width: 180px; font-weight:600;">Starting No.</label>
+          <input type="number" class="form-input" id="start_no" value="1" min="1" style="flex: 1;">
+        </div>
+      </div>
+      
+      <!-- Warning Alert -->
+      <div style="background:var(--danger-light, #fef2f2); border:1px solid #fecaca; color:#b91c1c; padding:15px; border-radius:8px; margin-top:25px; font-size:12px;">
+        <strong>⚠️ Audit Risk Warning:</strong> Renumbering modifies historical records. This should only be executed before final audit and if bank reconciliation is not fully locked. Ensure you have backed up the data.
+      </div>
+      
+      <div style="display:flex; justify-content: center; gap:20px; margin-top:30px;">
+        <button class="btn-primary" id="btn_renumber" style="min-width: 120px; padding: 10px 20px;">Renumber</button>
+        <button class="btn-secondary" onclick="location.href='utilities.html'" style="min-width: 120px; padding: 10px 20px;">Exit</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="../js/global.js"></script>
+<script src="../js/transactions-brain.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    $('#btn_renumber').on('click', processRenumber);
+});
+
+function processRenumber() {
+    const type = $('#trans_type').val();
+    const subType = $('#sub_trans_type').val();
+    const startNo = parseInt($('#start_no').val(), 10) || 1;
+    
+    if (!confirm('Are you strictly sure you want to renumber these vouchers? This operation will affect the general ledger sequence permanently.')) return;
+    
+    let dbKey = '';
+    let prefixDefault = '';
+    
+    if (type === 'payment') { dbKey = TRANS_DB.PYMT_VOUCHERS; prefixDefault = 'PV-'; }
+    else if (type === 'receipt') { dbKey = TRANS_DB.RCPT_VOUCHERS; prefixDefault = 'RV-'; }
+    else if (type === 'contra') { dbKey = TRANS_DB.CONTRA_VOUCHERS; prefixDefault = 'CV-'; }
+    else if (type === 'journal') { dbKey = TRANS_DB.JOURNAL_VOUCHERS; prefixDefault = 'JV-'; }
+    
+    if (!dbKey) return;
+    
+    if (typeof TransactionsBrain === 'undefined') {
+        showToast('System Error: Transaction Engine not loaded.', 'error');
+        return;
+    }
+    
+    // Fetch records
+    let vouchers = TransactionsBrain.read(dbKey) || [];
+    if (vouchers.length === 0) {
+        return showToast('No vouchers found to renumber.', 'info');
+    }
+    
+    // Filter by subType if strictly requested
+    let targetVouchers = vouchers;
+    if (subType === 'cash') {
+        targetVouchers = vouchers.filter(v => (v.cashBank || '').toLowerCase().includes('cash'));
+    } else if (subType === 'bank') {
+        targetVouchers = vouchers.filter(v => !(v.cashBank || '').toLowerCase().includes('cash'));
+    }
+    
+    if (targetVouchers.length === 0) {
+         return showToast('No vouchers matched the Sub-Type criteria.', 'info');
+    }
+
+    // Step 3: Sort Data DATE-WISE (ascending) safely
+    targetVouchers.sort((a, b) => {
+        let dateA = new Date(a.date).getTime();
+        let dateB = new Date(b.date).getTime();
+        return dateA - dateB;
+    });
+    
+    // Track numbers for each sequence series
+    let sequenceTracker = { default: startNo, cash: startNo, bank: startNo };
+
+    // Step 4: Reassign Numbers
+    targetVouchers.forEach(v => {
+        let prefix = prefixDefault;
+        let series = 'default';
+        
+        // Auto-detect based on account 'cashBank' for clean Cash-X vs Bank-X sequences (as per SOP request)
+        if ((type === 'payment' || type === 'receipt') && v.cashBank) {
+            let isCash = v.cashBank.toLowerCase().includes('cash');
+            prefix = isCash ? 'Cash-' : 'Bank-';
+            series = isCash ? 'cash' : 'bank';
+        }
+        
+        // Update both properties (depending on how module reads them)
+        const newVouNo = prefix + sequenceTracker[series]++;
+        v.no = newVouNo;
+        v.voucherNo = newVouNo;
+    });
+    
+    // Write the full list back (including un-targeted if any)
+    TransactionsBrain.write(dbKey, vouchers);
+    
+    // 5. Update the General Ledger System-Wide to reflect the new numbers
+    rebuildGeneralLedgerForType(type, targetVouchers);
+
+    // Activity Log
+    if (typeof ActivityLog !== 'undefined') {
+        ActivityLog.log('voucher_renumber', `Successfully renumbered ${targetVouchers.length} ${type} vouchers starting from ${startNo}.`);
+    }
+
+    showToast(`Renumbering of ${targetVouchers.length} vouchers completed successfully.`, 'success');
+}
+
+/** 
+ * Scans through the General Ledger and rebuilds entries for the affected Vouchers
+ * so the sequence stays perfectly accurate. 
+ */
+function rebuildGeneralLedgerForType(type, targetVouchers) {
+    const ledgerKey = 'jeevika_general_ledger';
+    let glEntries = JSON.parse(localStorage.getItem(ledgerKey) || '[]');
+    
+    // Remove old entries related to this type (that might have old voucher IDs)
+    // Here we identify old gl entries by matching exact type reference.
+    const vTypeMatch = type.toUpperCase();
+    glEntries = glEntries.filter(e => e.type !== vTypeMatch);
+    
+    // Rewrite new entries from the newly renumbered targetVouchers
+    targetVouchers.forEach(voucher => {
+        glEntries.push({
+           date: voucher.date, 
+           voucherNo: voucher.no, 
+           type: vTypeMatch,
+           account: voucher.paidTo || voucher.cashBank || voucher.receivedFrom || 'Unknown',
+           dr: type === 'payment' ? (voucher.amount || 0) : 0,
+           cr: type === 'receipt' ? (voucher.amount || 0) : 0,
+           particulars: voucher.particular || ''
+        });
+    });
+    
+    localStorage.setItem(ledgerKey, JSON.stringify(glEntries));
+}
+</script>
+</body>
+</html>

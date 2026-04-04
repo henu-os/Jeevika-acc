@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Receipt — Jeevika Accounting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">J</div>
+      <div class="logo-text"><h2>jeevika</h2><span>accounting</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+      <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+      <div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+      <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+      <!-- Additional links as needed -->
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div>
+          <div class="page-title">Member Receipt</div>
+          <div class="breadcrumb">Home / Transactions / Member Receipt</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-primary" onclick="ReceiptEngine.openAddForm()">+ Add Receipt</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="card">
+        <div style="display:grid; grid-template-columns: 1fr 200px; gap:20px;">
+          <div>
+            <div class="card-header"><h3>Member Receipt List</h3></div>
+            <div style="max-height:650px; overflow-y:auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Date</th>
+                    <th>Cash/Bank</th>
+                    <th>Mem. Code</th>
+                    <th>Member Name</th>
+                    <th>Amount</th>
+                    <th>Chq. No.</th>
+                  </tr>
+                </thead>
+                <tbody id="receipt-list-tbody">
+                  <!-- Rendered by ReceiptEngine.renderList() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Legacy Style Sidebar Actions -->
+          <div style="display:flex; flex-direction:column; gap:10px; padding-top:40px;">
+            <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="ReceiptEngine.openAddForm()">Add</button>
+            <button class="btn-secondary" style="width:100%; justify-content:center;">Alter</button>
+            <button class="btn-secondary" style="width:100%; justify-content:center; color:var(--danger);">Delete</button>
+            <button class="btn-secondary" style="width:100%; justify-content:center;">Multi Delete</button>
+            
+            <div style="margin:20px 0; border-top:1px solid #ddd; padding-top:15px;">
+              <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="showToast('Receipt Register generated', 'success')">Print Register</button>
+              <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="showToast('Please select a receipt to print', 'info')">Print Receipt</button>
+            </div>
+            
+            <button class="btn-secondary" style="width:100%; justify-content:center; margin-top:auto;" onclick="window.location.href='dashboard.html'">Exit</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="../js/global.js"></script>
+  <script src="../js/masters-brain.js"></script>
+  <script src="../js/rbac-engine.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      ReceiptEngine.renderList();
+      
+      // Auto-refresh when receipt is added
+      EventBus.on('receipt:added', function() {
+        ReceiptEngine.renderList();
+      });
+    });
+  </script>
+</body>
+</html>

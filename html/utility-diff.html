@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Check Difference — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <style>
+        body { background: #808080; font-family: sans-serif; }
+        .diff-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            border: 1px solid #999;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+        .diff-header {
+            padding: 8px 12px;
+            border-bottom: 1px solid #999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .grid-wrapper {
+            flex: 1;
+            overflow: auto;
+            border-bottom: 2px solid #666;
+            background: #d3d3d3;
+        }
+        .data-grid {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            table-layout: fixed;
+        }
+        .data-grid th {
+            background: #fff;
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #333;
+            text-align: left;
+            padding: 4px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+        }
+        .data-grid td {
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 4px 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .data-grid tr:hover { background: #f0f7ff; cursor: pointer; }
+        .data-grid tr.selected { background: #0056b3; color: #fff; }
+        
+        .details-wrapper {
+            height: 35%;
+            overflow: auto;
+            background: #d3d3d3;
+        }
+        .diff-footer {
+            padding: 10px;
+            text-align: right;
+            background: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+        .btn-legacy {
+            padding: 4px 25px;
+            background: #e1e1e1;
+            border: 1px solid #999;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-legacy:hover { background: #dcdcdc; }
+    </style>
+</head>
+<body>
+
+<div class="diff-container">
+    <div class="diff-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/2622/2622112.png" width="16" height="16">
+        <span>Check Difference</span>
+    </div>
+
+    <!-- Upper Grid: Error Summary -->
+    <div class="grid-wrapper">
+        <table class="data-grid" id="main_grid">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Type</th>
+                    <th style="width: 15%;">No.</th>
+                    <th style="width: 20%;">Sub Type</th>
+                    <th style="width: 15%;">Sub No.</th>
+                    <th style="width: 20%;">Amount</th>
+                    <th style="width: 15%;">Main</th>
+                </tr>
+            </thead>
+            <tbody id="main_tbody">
+                <!-- Data from UtilityBrain.checkDifferences() -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lower Grid: Detailed Breakdown -->
+    <div class="details-wrapper">
+        <table class="data-grid" id="detail_grid">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">type</th>
+                    <th style="width: 10%;">No.</th>
+                    <th style="width: 15%;">Date</th>
+                    <th style="width: 15%;">account id</th>
+                    <th style="width: 20%;">Account Name</th>
+                    <th style="width: 15%;">account id</th>
+                    <th style="width: 20%;">Account Name</th>
+                    <th style="width: 10%;">Index</th>
+                    <th style="width: 15%;">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="detail_tbody">
+                <tr><td colspan="9" style="text-align:center; padding:20px; color:#666;">Select a row above to see details</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="diff-footer">
+        <button class="btn-legacy" onclick="location.href='utilities.html'">Exit</button>
+    </div>
+</div>
+
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/utility-brain.js"></script>
+<script>
+    let currentDiffs = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDifferences();
+    });
+
+    function loadDifferences() {
+        currentDiffs = UtilityBrain.checkDifferences();
+        const tbody = document.getElementById('main_tbody');
+        
+        if (currentDiffs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px; color:green; font-weight:700;">\u2705 All Ledger Postings are Accurate! No Differences Found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = currentDiffs.map((d, i) => `
+            <tr onclick="selectRow(${i}, this)">
+                <td>${d.type}</td>
+                <td>${d.no}</td>
+                <td>${d.subType}</td>
+                <td>${d.subNo}</td>
+                <td style="color:${d.amount < 0 ? 'red' : 'blue'}; font-weight:bold;">${d.amount}</td>
+                <td>${d.main}</td>
+            </tr>
+        `).join('');
+    }
+
+    function selectRow(index, el) {
+        document.querySelectorAll('#main_tbody tr').forEach(r => r.classList.remove('selected'));
+        el.classList.add('selected');
+
+        const diff = currentDiffs[index];
+        const dtbody = document.getElementById('detail_tbody');
+
+        if (!diff.details || diff.details.length === 0) {
+            dtbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">No detailed postings found for this voucher.</td></tr>';
+            return;
+        }
+
+        dtbody.innerHTML = diff.details.map(det => `
+            <tr>
+                <td>${det.type}</td>
+                <td>${det.no}</td>
+                <td>${det.date}</td>
+                <td>${det.accId}</td>
+                <td>${det.accName}</td>
+                <td>${det.accId}</td>
+                <td>${det.accName}</td>
+                <td>${det.index}</td>
+                <td style="text-align:right; font-weight:600;">${det.amount.toLocaleString()}</td>
+            </tr>
+        `).join('');
+    }
+</script>
+
+</body>
+</html>

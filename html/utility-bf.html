@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Last Year Balance Forward — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .bf-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: 1px solid #0056b3;
+            overflow: hidden;
+        }
+        .bf-header {
+            background: #fff;
+            color: #333;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .bf-header h2 {
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .bf-body {
+            padding: 24px;
+            position: relative;
+        }
+        .warning-text {
+            color: #e53e3e;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+        .date-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        .date-row label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .date-input {
+            width: 120px;
+            padding: 4px 8px;
+            border: 1px solid #0056b3;
+            text-align: center;
+            font-size: 14px;
+        }
+        .cf-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-right: 50px;
+        }
+        .cf-row label {
+            font-size: 14px;
+        }
+        .cf-select {
+            width: 100px;
+            padding: 4px;
+            border: 1px solid #999;
+        }
+        .bf-footer {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        .btn-bf {
+            min-width: 100px;
+            padding: 6px 20px;
+            border: 1px solid #999;
+            background: #e9ecef;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-bf:hover {
+            background: #dee2e6;
+        }
+        .progress-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body style="background: #808080;"> <!-- Grey background like the screenshot -->
+
+<div class="bf-container">
+    <div class="bf-header">
+        <h2><img src="https://cdn-icons-png.flaticon.com/512/2622/2622112.png" width="20" height="20"> Last Year Balance Forward</h2>
+        <button onclick="location.href='utilities.html'" style="background:none;border:none;cursor:pointer;font-size:18px;">&times;</button>
+    </div>
+    
+    <div class="bf-body">
+        <div class="warning-text">Please <a href="rebuild-balances.html" style="color:#e53e3e;text-decoration:underline;">Use Rebuild</a> before use this option</div>
+        
+        <div class="date-row">
+            <label>From</label>
+            <input type="text" class="date-input date-picker" id="from_date" value="01/04/2024">
+            <label>To</label>
+            <input type="text" class="date-input date-picker" id="to_date" value="31/03/2025">
+        </div>
+
+        <div class="cf-row">
+            <label>C/f Member Balance</label>
+            <select class="cf-select" id="cf_member">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="cf-row">
+            <label>C/f Account Balance</label>
+            <select class="cf-select" id="cf_account">
+                <option value="no">No</option>
+                <option value="yes" selected>Yes</option>
+            </select>
+        </div>
+
+        <div class="progress-overlay" id="loader">
+            <div id="loader_text" style="font-weight:700;margin-bottom:10px;">Processing...</div>
+            <div style="width:100%;height:10px;background:#eee;border-radius:5px;overflow:hidden;">
+                <div id="loader_bar" style="width:0%;height:100%;background:#0056b3;transition:width 0.3s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bf-footer">
+        <button class="btn-bf" onclick="executeBF()">Ok</button>
+        <button class="btn-bf" onclick="location.href='utilities.html'">Cancel</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/utility-brain.js"></script>
+<script>
+    async function executeBF() {
+        const params = {
+            fromDate: document.getElementById('from_date').value,
+            toDate: document.getElementById('to_date').value,
+            cfMember: document.getElementById('cf_member').value === 'yes',
+            cfAccount: document.getElementById('cf_account').value === 'yes'
+        };
+
+        if (!params.cfMember && !params.cfAccount) {
+            showToast('Please select at least one balance type to carry forward', 'warning');
+            return;
+        }
+
+        if (!confirm('This will update the opening balances for the current year. Ensure you have run "Rebuild" first. Proceed?')) {
+            return;
+        }
+
+        const loader = document.getElementById('loader');
+        const lText = document.getElementById('loader_text');
+        const lBar = document.getElementById('loader_bar');
+
+        loader.style.display = 'flex';
+
+        try {
+            await UtilityBrain.balanceForward(params, (status, percent) => {
+                lText.textContent = status;
+                lBar.style.width = percent + '%';
+            });
+            showToast('Balances forwarded successfully!', 'success');
+            setTimeout(() => location.href = 'utilities.html', 1500);
+        } catch (err) {
+            showToast('Error: ' + err.message, 'error');
+            loader.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>

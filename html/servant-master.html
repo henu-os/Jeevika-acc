@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Servant Master — Jeevika Accounting</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+<div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+<div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+<div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+<div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div>
+<div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
+<div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div>
+<div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div>
+<div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div>
+<div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div>
+<div class="sidebar-section">───────────</div>
+<div class="sidebar-bottom">
+<div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div>
+<div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div>
+</div></nav></aside>
+<div class="main-wrapper">
+<header class="topbar"><div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><div class="page-title">Servant Master</div><div class="breadcrumb">Home / Masters / Servant Master</div></div></div><div class="topbar-center"><div class="search-wrap"><input type="text" class="search-bar" placeholder="Search..."></div></div><div class="topbar-right"><span class="topbar-date" id="currentDate"></span><button class="topbar-icon">🔔<span class="notif-badge">3</span></button><button class="topbar-icon">⊞</button><button class="topbar-icon">🛡️</button><button class="topbar-icon">✉️</button><button class="topbar-icon">⚙️</button><div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div><span style="font-size:10px;color:var(--text-muted)">▼</span></div></div></header>
+<main class="page-content">
+<div class="page-header"><div><h1>Servant Master</h1><p>Servant Master</p></div>
+<div class="btn-group"><button class="btn-secondary">📤 Export</button><button class="btn-primary" onclick="openModal('addModal')">+ Add New</button></div></div>
+<div class="card"><table class="data-table"><thead><tr><th>Sr.</th><th>Name</th><th>Role</th><th>Contact</th><th>Salary (₹)</th><th>Join Date</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td>1</td><td>Ramesh Kumar</td><td>Watchman</td><td>9876543230</td><td><span class="amount">₹15,000</span></td><td>01/02/2020</td><td><span class="badge badge-success">Active</span></td></tr>
+<tr><td>2</td><td>Suresh Yadav</td><td>Cleaner</td><td>9876543231</td><td><span class="amount">₹12,000</span></td><td>15/06/2021</td><td><span class="badge badge-success">Active</span></td></tr>
+<tr><td>3</td><td>Meena Devi</td><td>Sweeper</td><td>9876543232</td><td><span class="amount">₹10,000</span></td><td>01/01/2022</td><td><span class="badge badge-success">Active</span></td></tr></tbody></table></div>
+<div class="modal-overlay" id="addModal"><div class="modal"><div class="modal-header"><h3>Add Servant</h3><button class="modal-close" onclick="closeModal('addModal')">✕</button></div>
+<div class="modal-body"><div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" placeholder="Full name" required></div>
+<div class="form-group"><label class="form-label">Role / Designation</label><select class="form-input select2"><option>Watchman</option><option>Cleaner</option><option>Sweeper</option><option>Gardener</option><option>Plumber</option><option>Other</option></select></div>
+<div class="form-group"><label class="form-label">Contact No.</label><input type="text" class="form-input" placeholder="9876543210" ></div>
+<div class="form-group"><label class="form-label">Address</label><textarea class="form-input" rows="3" placeholder="Full address"></textarea></div>
+<div class="form-group"><label class="form-label">Salary (₹)</label><input type="number" class="form-input" placeholder="15000" ></div>
+<div class="form-group"><label class="form-label">Join Date</label><input type="text" class="form-input date-picker" placeholder="dd/mm/yyyy"></div>
+<div class="form-group"><label class="form-label">Status</label><select class="form-input select2"><option>Active</option><option>Inactive</option></select></div></div>
+<div class="modal-footer"><button class="btn-secondary" onclick="closeModal('addModal')">Cancel</button><button class="btn-primary" onclick="showToast('Saved successfully');closeModal('addModal')">Save</button></div></div></div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="../js/global.js"></script>
+
+</body></html>

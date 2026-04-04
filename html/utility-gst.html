@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GST Calculate — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <div class="main-wrapper">
+        <header class="topbar"></header>
+
+        <main class="page-content">
+            <div class="page-header">
+                <div><h1>GST Calculation</h1><p>Automated CGST/SGST generation for Member Billing Master.</p></div>
+            </div>
+
+            <div style="display:flex; justify-content:center; align-items:flex-start; padding-top:40px;">
+                <div class="card" style="width:520px; padding:32px;">
+                    <div style="text-align:center; margin-bottom:30px;">
+                        <div style="font-size:40px; margin-bottom:10px;">💰</div>
+                        <h2 style="color:var(--primary); font-weight:800;">Billing Tax Engine</h2>
+                        <p style="color:var(--text-secondary); font-size:14px;">Select the member range to recalculate GST components.</p>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:24px;">
+                        <div class="form-group">
+                            <label class="form-label">From Member</label>
+                            <select id="from_member" class="form-input" style="height:40px; font-weight:700;"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">To Member</label>
+                            <select id="to_member" class="form-input" style="height:40px; font-weight:700;"></select>
+                        </div>
+                    </div>
+
+                    <div id="loader" style="display:none; margin-bottom:20px; text-align:center;">
+                        <div id="loader_text" style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:10px;">Processing GST...</div>
+                        <div class="progress-bar"><div id="loader_bar" class="progress-fill" style="width:0%;"></div></div>
+                    </div>
+
+                    <div style="margin-top:24px; display:flex; flex-direction:column; gap:12px;">
+                        <button class="btn-primary" style="height:48px;" onclick="executeGstCalc()">Recalculate GST Now</button>
+                        <button class="btn-secondary" style="height:48px;" onclick="location.href='billing-master.html'">View Billing Master</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/masters-brain.js"></script>
+    <script src="../js/utility-brain.js"></script>
+    <script src="../js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const members = MemberMaster.getAll();
+            const f = document.getElementById('from_member');
+            const t = document.getElementById('to_member');
+            
+            const opts = members.map(m => `<option value="${m.code}">${m.code} - ${m.names ? m.names[0] : ''}</option>`).join('');
+            f.innerHTML = opts;
+            t.innerHTML = opts;
+            
+            if (members.length > 0) t.value = members[members.length - 1].code;
+        });
+
+        async function executeGstCalc() {
+            const params = {
+                fromMember: document.getElementById('from_member').value,
+                toMember: document.getElementById('to_member').value
+            };
+
+            const loader = document.getElementById('loader');
+            const lBar = document.getElementById('loader_bar');
+            const lText = document.getElementById('loader_text');
+
+            loader.style.display = 'block';
+
+            try {
+                await UtilityBrain.calculateGST(params, (status, percent) => {
+                    lText.textContent = status;
+                    lBar.style.width = percent + '%';
+                });
+                showToast('GST Calculation applied successfully', 'success');
+                setTimeout(() => location.href = 'billing-master.html', 1500);
+            } catch (err) {
+                showToast('Calculation Error: ' + err.message, 'error');
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

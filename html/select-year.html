@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Select Year — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <!-- Injected by layout.js -->
+        </header>
+
+        <main class="page-content">
+            <div class="page-header">
+                <div>
+                    <h1>Select Financial Year</h1>
+                    <p>Change the active accounting period for the current society.</p>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; align-items:flex-start; padding-top:40px;">
+                <div class="card" style="width:480px; padding:32px;">
+                    <div style="text-align:center; margin-bottom:30px;">
+                        <div style="font-size:40px; margin-bottom:10px;">📅</div>
+                        <h2 style="color:var(--primary); font-weight:800;">Choose Accounting Period</h2>
+                        <p style="color:var(--text-secondary); font-size:14px;">All reports and transactions will reflect this year.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Active Financial Year</label>
+                        <select id="year_select" class="form-input" style="height:44px; font-weight:700; font-size:16px;">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <div style="margin-top:24px; display:flex; flex-direction:column; gap:12px;">
+                        <button class="btn-primary" style="height:48px;" onclick="setYear()">Switch to Selected Year</button>
+                        <button class="btn-secondary" style="height:48px;" onclick="location.href='utilities.html'">Cancel & Exit</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/masters-brain.js"></script>
+    <script src="../js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const years = FinancialYearMaster.getAll();
+            const sel = document.getElementById('year_select');
+            
+            sel.innerHTML = years.map(y => `
+                <option value="${y.start}-${y.end}">${y.start} to ${y.end}</option>
+            `).join('');
+
+            // Set current active year in dropdown
+            const activeSoc = JSON.parse(localStorage.getItem('jeevika_active_society') || '{}');
+            if (activeSoc.financialYear) {
+                sel.value = activeSoc.financialYear;
+            }
+        });
+
+        function setYear() {
+            const val = document.getElementById('year_select').value;
+            FinancialYearMaster.setActiveYear(val);
+            showToast('Financial Year switched to ' + val, 'success');
+            setTimeout(() => location.reload(), 1000);
+        }
+    </script>
+</body>
+</html>

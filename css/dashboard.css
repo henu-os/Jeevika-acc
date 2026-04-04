@@ -1,0 +1,166 @@
+/* ════════════════════════════════════════
+   DASHBOARD PAGE STYLES
+   ════════════════════════════════════════ */
+
+/* DASHBOARD GRID */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+}
+.dash-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.dash-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ARCHITECTURE DIAGRAM */
+.arch-card { padding: 32px; text-align: center; }
+.arch-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 24px;
+}
+.arch-diagram {
+  display: flex; justify-content: center;
+  align-items: center; position: relative;
+  min-height: 340px;
+}
+.arch-center {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: white; z-index: 2;
+  box-shadow: var(--shadow-lg);
+}
+.arch-center .ac-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.arch-center .ac-sub { font-size: 9px; opacity: 0.7; }
+.arch-modules {
+  position: absolute; width: 100%; height: 100%;
+}
+.arch-module {
+  position: absolute;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px; min-width: 140px;
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.arch-module:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+.arch-module h4 {
+  font-size: 12px; font-weight: 700;
+  color: var(--primary); margin-bottom: 6px;
+}
+.arch-module ul { list-style: none; font-size: 10px; color: var(--text-secondary); }
+.arch-module ul li { margin-bottom: 2px; }
+.arch-module ul li::before { content: '•'; color: var(--accent); margin-right: 4px; }
+
+/* OUTSTANDING */
+.outstanding-item {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.outstanding-item:last-child { border-bottom: none; }
+.os-info { display: flex; align-items: center; gap: 10px; }
+.os-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px;
+  color: var(--primary);
+}
+.os-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.os-flat { font-size: 11px; color: var(--text-muted); }
+.os-amount {
+  font-size: 14px; font-weight: 700;
+  color: var(--danger); text-align: right;
+}
+.os-date { font-size: 10px; color: var(--text-muted); }
+.os-actions { display: flex; gap: 6px; }
+
+/* INCOME CHART */
+.chart-container {
+  position: relative;
+  width: 180px; height: 180px;
+  margin: 0 auto;
+}
+.legend { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.legend-item {
+  display: flex; align-items: center;
+  justify-content: space-between; font-size: 12px;
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%; margin-right: 8px;
+}
+.legend-label { display: flex; align-items: center; color: var(--text-secondary); }
+.legend-value { font-weight: 700; color: var(--text-primary); }
+
+/* SOCIETY CARD */
+.society-card {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: var(--radius-lg);
+  padding: 20px; color: white; border: none;
+}
+.society-card .sc-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.society-card .sc-acct { font-size: 11px; opacity: 0.7; margin-bottom: 12px; }
+.society-card .sc-row {
+  display: flex; justify-content: space-between;
+  align-items: center;
+}
+.society-card .sc-label { font-size: 11px; opacity: 0.7; }
+.society-card .sc-val { font-size: 20px; font-weight: 800; }
+.society-card .btn-reports {
+  margin-top: 12px;
+  background: rgba(255,255,255,0.2);
+  border: none; color: white;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 600; font-size: 12px;
+  cursor: pointer; width: 100%;
+  font-family: inherit;
+}
+.society-card .btn-reports:hover { background: rgba(255,255,255,0.3); }
+
+/* NOTICE BOARD */
+.notice-item {
+  display: flex; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.notice-item:last-child { border-bottom: none; }
+.notice-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.notice-icon.meeting { background: #FEF3C7; }
+.notice-icon.update  { background: #DBEAFE; }
+.notice-icon.mail    { background: #DCFCE7; }
+.notice-icon.bill    { background: #FEE2E2; }
+.notice-icon.weather { background: var(--accent-soft); }
+.notice-text h4 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.notice-text p  { font-size: 11px; color: var(--text-muted); }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .dash-grid { grid-template-columns: 1fr; }
+}

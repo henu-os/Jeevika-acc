@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Receipt Voucher (Society Expense) — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .list-container { display: flex; flex-direction: column; height: calc(100vh - 180px); }
+        .table-wrapper { flex: 1; overflow: auto; background: white; border-radius: 8px; border: 1px solid var(--border); }
+        .action-sidebar { width: 180px; display: flex; flex-direction: column; gap: 10px; padding-left: 20px; }
+        .btn-action { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #f8f9fa; cursor: pointer; font-weight: 600; text-align: left; font-size: 13px; }
+        .btn-action:hover { background: #e9ecef; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-card { background: white; width: 680px; border-radius: 10px; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); overflow: hidden; }
+        .modal-header { padding: 15px 20px; background: #28a745; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 25px; }
+        .modal-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
+        
+        .excel-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px; border: 1px dashed #28a745; text-align: center; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+        <nav class="sidebar-nav">
+            <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+            <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+            <div class="nav-item"><a href="transactions.html" class="active"><span class="icon">💰</span> Transactions</a></div>
+            <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <div><div class="page-title">Receipt Voucher List</div><div class="breadcrumb">Transactions / Receipt Voucher</div></div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div style="display: flex;">
+                <div class="list-container" style="flex: 1;">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="rcptTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox" onclick="toggleSelectAll(this)"></th>
+                                    <th>Vou.No.</th>
+                                    <th>Vou.Date</th>
+                                    <th>Cash/Bank</th>
+                                    <th class="amount">Amount</th>
+                                    <th>Chq.No.</th>
+                                    <th>Paid To</th>
+                                    <th>Bill No.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rcptTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="action-sidebar">
+                    <button class="btn-primary" style="width: 100%;" onclick="openVouModal()">Add</button>
+                    <button class="btn-action" onclick="alterVou()">Alter</button>
+                    <button class="btn-action" onclick="deleteVou()">Delete</button>
+                    <button class="btn-action" style="color:var(--danger)" onclick="multiDelete()">Multi Delete</button>
+                    <div style="margin: 10px 0; border-top: 1px solid #eee;"></div>
+                    <button class="btn-action" onclick="exportPDF('rcptTable', 'Receipt_Register')">Print Register</button>
+                    <button class="btn-action" onclick="printVoucher()">Print Voucher</button>
+                    
+                    <div class="excel-box">
+                        <div style="font-size: 11px; font-weight: 800; color: #28a745; margin-bottom: 5px;">EXCEL BULK UPLOAD</div>
+                        <button class="btn-secondary" style="width:100%; font-size:10px; padding:5px;" onclick="downloadTemplate()">🔽 Download Template</button>
+                        <input type="file" id="excelUpload" style="display:none;" onchange="handleExcelUpload(this)">
+                        <button class="btn-primary" style="width:100%; font-size:10px; padding:5px; margin-top:5px; background:#28a745" onclick="document.getElementById('excelUpload').click()">🔼 Upload Data</button>
+                    </div>
+
+                    <button class="btn-secondary" style="margin-top: auto;" onclick="location.href='transactions.html'">Exit</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="vouModal">
+        <div class="modal-card">
+            <div class="modal-header"><h3>Receipt Voucher Add</h3><button onclick="closeVouModal()" style="background:none; border:none; color:white; font-size:24px;">&times;</button></div>
+            <div class="modal-body">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:15px;">
+                    <div class="form-group"><label class="form-label">Voucher No.</label><input type="text" id="vouNo" class="form-input" readonly></div>
+                    <div class="form-group"><label class="form-label">Date</label><input type="text" id="vouDate" class="form-input date-picker"></div>
+                </div>
+
+                <div class="form-group"><label class="form-label">Cash / Bank Account</label>
+                    <select id="cashBank" class="form-input">
+                        <option>The Saraswat Bank A/C-335200100000559</option>
+                        <option>Cash in Hand</option>
+                    </select>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:15px;">
+                    <div class="form-group"><label class="form-label">Amount</label><input type="number" id="vouAmount" class="form-input" style="font-weight:800; font-size:18px;"></div>
+                    <div class="form-group"><label class="form-label">Bill No.</label><input type="text" id="billNo" class="form-input"></div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:15px;">
+                    <div class="form-group"><label class="form-label">Cheque No.</label><input type="text" id="chqNo" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Cheque Date</label><input type="text" id="chqDate" class="form-input date-picker"></div>
+                </div>
+
+                <div class="form-group"><label class="form-label">Paid To (Vendor/Entity)</label><input type="text" id="paidTo" class="form-input" placeholder="e.g. ELECTRICITY BOARD"></div>
+                <div class="form-group"><label class="form-label">Particular (Description)</label><textarea id="vouParticular" class="form-input" rows="2"></textarea></div>
+            </div>
+            <div class="modal-footer"><button class="btn-primary" onclick="saveVou()" style="background:#28a745">Save</button><button class="btn-secondary" onclick="closeVouModal()">Exit</button></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/transactions-brain.js"></script>
+    <script>
+        function renderTable() {
+            const data = TransactionsBrain.getVouchers('receipt');
+            document.getElementById('rcptTableBody').innerHTML = data.map(d => `
+                <tr data-no="${d.no}">
+                    <td><input type="checkbox" class="row-cb"></td>
+                    <td>${d.no}</td>
+                    <td>${d.date}</td>
+                    <td style="font-size:11px;">${d.cashBank}</td>
+                    <td class="amount">${formatCurrency(d.amount)}</td>
+                    <td>${d.chqNo || ''}</td>
+                    <td>${d.paidTo}</td>
+                    <td>${d.billNo || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        function openVouModal(edit = null) {
+            document.getElementById('vouNo').value = edit ? edit.no : 'Rcpt-' + TransactionsBrain.getNextNo('RV');
+            document.getElementById('vouDate').value = edit ? edit.date : new Date().toLocaleDateString('en-GB');
+            document.getElementById('vouAmount').value = edit ? edit.amount : '';
+            document.getElementById('paidTo').value = edit ? edit.paidTo : '';
+            document.getElementById('vouParticular').value = edit ? edit.particular : '';
+            document.getElementById('vouModal').style.display = 'flex';
+        }
+
+        function saveVou() {
+            const vou = {
+                no: document.getElementById('vouNo').value,
+                date: document.getElementById('vouDate').value,
+                cashBank: document.getElementById('cashBank').value,
+                amount: parseFloat(document.getElementById('vouAmount').value),
+                chqNo: document.getElementById('chqNo').value,
+                paidTo: document.getElementById('paidTo').value,
+                billNo: document.getElementById('billNo').value,
+                particular: document.getElementById('vouParticular').value
+            };
+            TransactionsBrain.saveVoucher(vou, 'receipt');
+            closeVouModal();
+            renderTable();
+            showToast('Receipt saved');
+        }
+
+        function closeVouModal() { document.getElementById('vouModal').style.display = 'none'; }
+        
+        function handleExcelUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            showToast('Processing Excel file...', 'info');
+            // Mock processing: Just adding 2 entries
+            setTimeout(() => {
+                TransactionsBrain.saveVoucher({ no: 'Rcpt-Bulk1', date: '01/04/2026', cashBank: 'Cash', amount: 500, paidTo: 'Bulk Vendor 1', particular: 'Uploaded via Excel' }, 'receipt');
+                TransactionsBrain.saveVoucher({ no: 'Rcpt-Bulk2', date: '02/04/2026', cashBank: 'Saraswat Bank', amount: 1200, paidTo: 'Bulk Vendor 2', particular: 'Uploaded via Excel' }, 'receipt');
+                renderTable();
+                showToast('2 entries imported successfully');
+            }, 1000);
+        }
+
+        function downloadTemplate() {
+            const csv = "Voucher No,Date,Amount,Account,Paid To,Particular\nRcpt-001,01/04/2026,1000,Cash in Hand,Vendor Name,Description";
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Receipt_Template.csv');
+            a.click();
+        }
+
+        function toggleSelectAll(m) { document.querySelectorAll('.row-cb').forEach(c => c.checked = m.checked); }
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>

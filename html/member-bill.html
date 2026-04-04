@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Member Bill — Jeevika Accounting</title><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/global.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"><link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"></head><body><aside class="sidebar" id="sidebar"><div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div><nav class="sidebar-nav"><div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div><div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div><div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div><div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div><div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div><div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div><div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div><div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div><div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div><div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div><div class="sidebar-section">───────────</div><div class="sidebar-bottom"><div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div><div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div></div></nav></aside><div class="main-wrapper"><header class="topbar"><div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><div class="page-title">Member Bill</div><div class="breadcrumb">Home / Transactions / Member Bill</div></div></div><div class="topbar-center"><div class="search-wrap"><input type="text" class="search-bar" placeholder="Search..."></div></div><div class="topbar-right"><span class="topbar-date" id="currentDate"></span><button class="topbar-icon">🔔<span class="notif-badge">3</span></button><button class="topbar-icon">⊞</button><button class="topbar-icon">🛡️</button><button class="topbar-icon">✉️</button><button class="topbar-icon">⚙️</button><div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div><span style="font-size:10px;color:var(--text-muted)">▼</span></div></div></header><main class="page-content">
+  <div class="page-header">
+    <div><h1>Member Bill (Transaction)</h1><p>Execution layer: Convert Master charges into official invoices</p></div>
+    <div class="btn-group">
+       <button class="btn-secondary" onclick="BillingEngine.openInterestForm()">Calculate Interest</button>
+       <button class="btn-primary" onclick="BillingEngine.renderHistory()">Refresh History</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <h3 style="font-weight:700;margin-bottom:16px">Bulk Bill Generation</h3>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Starting Bill No.</label><input type="text" class="form-input" id="bill_start_no" value="1001"></div>
+      <div class="form-group"><label class="form-label">Bill No. Prefix</label><input type="text" class="form-input" id="bill_prefix" value="BILL/2025/"></div>
+      <div class="form-group"><label class="form-label">Billing Period</label><input type="text" class="form-input" id="bill_period" placeholder="APRIL-2025"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Bill Date</label><input type="date" class="form-input" id="bill_date"></div>
+      <div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="bill_due_date"></div>
+      <div class="form-group"><label class="form-label">Member Range</label><select class="form-input" id="bill_range"><option value="all">All Members</option></select></div>
+    </div>
+    <div class="btn-group" style="justify-content: flex-end; margin-top:10px;">
+      <button class="btn-secondary" style="border: 1px solid var(--primary); color: var(--primary);">👁️ Preview Mode</button>
+      <button class="btn-primary" id="generate_bills_btn">🚀 Generate & Post to Ledger</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:grid; grid-template-columns: 1fr 200px; gap:20px;">
+      <div>
+        <div class="card-header"><h3>Recent Billing Register</h3></div>
+        <div style="max-height:600px; overflow-y:auto;">
+          <table class="data-table">
+            <thead><tr><th>Bill No.</th><th>Member Name</th><th>Period</th><th>Amount</th><th>GST</th><th>Total Bill</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="bill-history-tbody">
+              <!-- Rendered by BillingEngine.renderHistory() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Right Action Bar (Legacy Style) -->
+      <div style="display:flex; flex-direction:column; gap:8px; padding-top:40px;">
+        <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="showToast('Select a member to add bill', 'info')">Add</button>
+        <button class="btn-secondary" style="width:100%; justify-content:center;">Alter</button>
+        <button class="btn-secondary" style="width:100%; justify-content:center; color:var(--danger);">Delete</button>
+        
+        <div style="margin:10px 0; border-top:1px solid #ddd; padding-top:10px;">
+           <label style="font-size:11px; font-weight:700; color:#666;">Search By</label>
+           <select class="form-input" style="font-size:12px;"><option>Bill No.</option><option>Member</option></select>
+           <input class="form-input" style="font-size:12px; margin-top:4px;" placeholder="...">
+        </div>
+
+        <button class="btn-primary" style="width:100%; justify-content:center; background:var(--primary-dark);" onclick="BillingEngine.openAutoGenerateForm()">Auto Generate Bill</button>
+        <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="BillingEngine.openMultiDeleteForm()">Multi Delete</button>
+        <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="BillingEngine.openMultiChangeForm()">Multi Change</button>
+        
+        <button class="btn-secondary" style="width:100%; justify-content:center; margin-top:20px; border:1px solid var(--primary); color:var(--primary);" onclick="showToast('Register generated', 'success')">Print Register</button>
+        <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="window.location.href='dashboard.html'">Exit</button>
+      </div>
+    </div>
+  </div>
+</main></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/rbac-engine.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set default dates
+    const today = new Date().toISOString().split('T')[0];
+    const due = new Date(); due.setDate(due.getDate() + 10);
+    document.getElementById('bill_date').value = today;
+    document.getElementById('bill_due_date').value = due.toISOString().split('T')[0];
+    
+    // Initial Render
+    BillingEngine.renderHistory();
+
+    // Wire Generate Button
+    document.getElementById('generate_bills_btn').onclick = function() {
+      const params = {
+        startNo: document.getElementById('bill_start_no').value,
+        prefix:  document.getElementById('bill_prefix').value,
+        period:  document.getElementById('bill_period').value,
+        billDate: document.getElementById('bill_date').value,
+        dueDate:  document.getElementById('bill_due_date').value
+      };
+      if (!params.period) { showToast('Please enter Billing Period', 'warning'); return; }
+      if (confirm('Are you sure you want to generate bills for ALL members? This will post entries to the general ledger.')) {
+        BillingEngine.generateBulk(params);
+      }
+    };
+  });
+</script>
+</body></html>

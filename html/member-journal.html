@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Member Journal — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <style>
+        .list-container { display: flex; flex-direction: column; height: calc(100vh - 180px); }
+        .table-wrapper { flex: 1; overflow: auto; background: white; border-radius: 8px; border: 1px solid var(--border); }
+        .action-sidebar { width: 180px; display: flex; flex-direction: column; gap: 10px; padding-left: 20px; }
+        .btn-action { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #f8f9fa; cursor: pointer; font-weight: 600; text-align: left; }
+        .btn-action:hover { background: #e9ecef; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-card { background: white; width: 680px; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid var(--primary); }
+        .modal-header { padding: 12px 20px; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 25px; }
+        .modal-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 15px; }
+
+        .journal-box { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; position: relative; margin-top: 20px; }
+        .box-title { font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
+        .debit-side { color: var(--danger); }
+        .credit-side { color: var(--success); }
+        .vs-divider { position: absolute; left: 50%; top: 20%; bottom: 10%; width: 1px; background: #eee; transform: translateX(-50%); }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+        <nav class="sidebar-nav">
+            <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+            <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+            <div class="nav-item"><a href="transactions.html" class="active"><span class="icon">💰</span> Transactions</a></div>
+            <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <div><div class="page-title">Member Journal (Internal Adjustment)</div><div class="breadcrumb">Transactions / Member Journal</div></div>
+            </div>
+            <div class="topbar-right">
+                <span class="topbar-date" id="currentDate"></span>
+                <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div style="display: flex;">
+                <div class="list-container" style="flex: 1;">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="mjTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox" onclick="toggleSelectAll(this)"></th>
+                                    <th>No.</th>
+                                    <th>Date</th>
+                                    <th>Period</th>
+                                    <th>(Dr) From Member</th>
+                                    <th>(Cr) To Member</th>
+                                    <th class="amount">Amount</th>
+                                    <th>Particulars</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mjTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="action-sidebar">
+                    <button class="btn-primary" style="width: 100%;" onclick="openMjModal()">Add</button>
+                    <button class="btn-action" onclick="alterMj()">Alter</button>
+                    <button class="btn-action" onclick="deleteMj()">Delete</button>
+                    <button class="btn-action" style="color: var(--danger);" onclick="multiDelete()">Multi Delete</button>
+                    <button class="btn-secondary" style="margin-top: auto;" onclick="exportPDF('mjTable', 'Journal_Register')">Print Register</button>
+                    <button class="btn-secondary" onclick="location.href='transactions.html'">Exit</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="mjModal">
+        <div class="modal-card">
+            <div class="modal-header"><h3>Member Journal Entry</h3><button onclick="closeMjModal()" style="background:none; border:none; color:white; font-size:24px;">&times;</button></div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <div class="form-group"><label class="form-label">Journal No.</label><input type="text" id="mjNo" class="form-input" readonly></div>
+                    <div class="form-group"><label class="form-label">Date</label><input type="text" id="mjDate" class="form-input date-picker"></div>
+                    <div class="form-group"><label class="form-label">Period</label><input type="text" id="mjPeriod" class="form-input month-picker"></div>
+                </div>
+
+                <div class="journal-box">
+                    <div class="vs-divider"></div>
+                    
+                    <div class="debit-side">
+                        <div class="box-title">(Dr.) DEBIT SIDE</div>
+                        <div class="form-group"><label class="form-label">From Member</label><select id="memberFrom" class="select2"></select></div>
+                        <div class="form-group"><label class="form-label">Account Head</label>
+                            <select id="accFrom" class="form-input">
+                                <option value="maintenance">Maintenance Account</option>
+                                <option value="clubhouse">Club House Account</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="credit-side">
+                        <div class="box-title">(Cr.) CREDIT SIDE</div>
+                        <div class="form-group"><label class="form-label">To Member</label><select id="memberTo" class="select2"></select></div>
+                        <div class="form-group"><label class="form-label">Account Head</label>
+                            <select id="accTo" class="form-input">
+                                <option value="maintenance">Maintenance Account</option>
+                                <option value="clubhouse">Club House Account</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div style="display: flex; gap: 20px; align-items: flex-end;">
+                        <div class="form-group" style="flex: 1; margin:0;"><label class="form-label">Journal Narration</label><input type="text" id="mjNarration" class="form-input" placeholder="Enter reason for adjustment..."></div>
+                        <div class="form-group" style="width: 140px; margin:0;"><label class="form-label">Amount (₹)</label><input type="number" id="mjAmount" class="form-input" style="font-weight:800; font-size:18px; text-align:right;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn-primary" onclick="saveMj()">Save Entry</button><button class="btn-secondary" onclick="closeMjModal()">Exit</button></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/masters-brain.js"></script>
+    <script src="../js/transactions-brain.js"></script>
+    <script>
+        function renderTable() {
+            const data = TransactionsBrain.getMemberJournals();
+            document.getElementById('mjTableBody').innerHTML = data.map(d => `
+                <tr data-no="${d.no}">
+                    <td><input type="checkbox" class="row-cb"></td>
+                    <td>${d.no}</td>
+                    <td>${d.date}</td>
+                    <td>${d.period || ''}</td>
+                    <td>${d.memberCode} — ${d.memberName}</td>
+                    <td>${d.toMemberCode} — ${d.toMemberName}</td>
+                    <td class="amount">${formatCurrency(d.amount)}</td>
+                    <td title="${d.particular}">${d.particular}</td>
+                </tr>
+            `).join('');
+        }
+
+        function populateMembers() {
+            const members = MemberMaster.getAll();
+            const opts = members.map(m => `<option value="${m.code}">${m.code} — ${m.names[0]}</option>`).join('');
+            $('#memberFrom, #memberTo').html('<option value="">-- Select Member --</option>' + opts);
+            initSelect2();
+        }
+
+        function openMjModal(editObj = null) {
+            document.getElementById('mjNo').value = editObj ? editObj.no : TransactionsBrain.getNextNo('MJ');
+            document.getElementById('mjDate').value = editObj ? editObj.date : new Date().toLocaleDateString('en-GB');
+            document.getElementById('mjAmount').value = editObj ? editObj.amount : '';
+            document.getElementById('mjNarration').value = editObj ? editObj.particular : '';
+            if (editObj) {
+                $('#memberFrom').val(editObj.memberCode).trigger('change');
+                $('#memberTo').val(editObj.toMemberCode).trigger('change');
+                document.getElementById('accFrom').value = editObj.debitAccountType;
+                document.getElementById('accTo').value = editObj.creditAccountType;
+            }
+            document.getElementById('mjModal').style.display = 'flex';
+        }
+
+        function saveMj() {
+            const from = $('#memberFrom').val();
+            const to = $('#memberTo').val();
+            const amt = parseFloat(document.getElementById('mjAmount').value);
+            const accFrom = document.getElementById('accFrom').value;
+            const accTo = document.getElementById('accTo').value;
+
+            if (!from || !to || !amt) { showToast('Complete all fields', 'error'); return; }
+            
+            // Rule Validation
+            if (from === to && accFrom === accTo) {
+                showToast('Source and Target cannot be identical', 'error'); return;
+            }
+
+            const journal = {
+                no: document.getElementById('mjNo').value,
+                date: document.getElementById('mjDate').value,
+                period: document.getElementById('mjPeriod').value,
+                memberCode: from,
+                memberName: document.getElementById('memberFrom').selectedOptions[0].text.split(' — ')[1],
+                debitAccountType: accFrom,
+                toMemberCode: to,
+                toMemberName: document.getElementById('memberTo').selectedOptions[0].text.split(' — ')[1],
+                creditAccountType: accTo,
+                amount: amt,
+                particular: document.getElementById('mjNarration').value
+            };
+
+            TransactionsBrain.saveMemberJournal(journal);
+            closeMjModal();
+            renderTable();
+            showToast('Journal Entry Saved');
+        }
+
+        function closeMjModal() { document.getElementById('mjModal').style.display = 'none'; }
+        function toggleSelectAll(m) { document.querySelectorAll('.row-cb').forEach(c => c.checked = m.checked); }
+        function multiDelete() {
+            const checked = document.querySelectorAll('.row-cb:checked');
+            if (checked.length === 0) return;
+            confirmDelete(`Delete ${checked.length} entries?`).then(ok => {
+                if (ok) {
+                    const nos = Array.from(checked).map(c => c.closest('tr').dataset.no);
+                    TransactionsBrain.deleteMemberJournals(nos);
+                    renderTable();
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => { renderTable(); populateMembers(); });
+    </script>
+</body>
+</html>

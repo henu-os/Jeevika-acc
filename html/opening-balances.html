@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Opening Balances — Jeevika Accounting</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+<div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+<div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+<div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+<div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div>
+<div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
+<div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div>
+<div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div>
+<div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div>
+<div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div>
+<div class="sidebar-section">───────────</div>
+<div class="sidebar-bottom">
+<div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div>
+<div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div>
+</div></nav></aside>
+<div class="main-wrapper">
+<header class="topbar"><div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><div class="page-title">Opening Balances</div><div class="breadcrumb">Home / Masters / Opening Balances</div></div></div><div class="topbar-center"><div class="search-wrap"><input type="text" class="search-bar" placeholder="Search..."></div></div><div class="topbar-right"><span class="topbar-date" id="currentDate"></span><button class="topbar-icon">🔔<span class="notif-badge">3</span></button><button class="topbar-icon">⊞</button><button class="topbar-icon">🛡️</button><button class="topbar-icon">✉️</button><button class="topbar-icon">⚙️</button><div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div><span style="font-size:10px;color:var(--text-muted)">▼</span></div></div></header>
+<main class="page-content">
+  <div class="page-header">
+    <div><h1>Opening Balance</h1><p>Initialize society financial position</p></div>
+    <div class="btn-group">
+      <select class="form-input" style="width:160px"><option>FY 2025-26</option></select>
+      <button class="btn-secondary">📥 Import</button>
+      <button class="btn-primary" id="ob_save_btn">💾 Update & Save</button>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr 240px; gap: 20px;">
+    <!-- LEFT: Main Grid -->
+    <div>
+      <div class="card" style="padding:0; overflow:hidden; min-height: 500px; display: flex; flex-direction: column;">
+        <div style="flex:1; overflow-y:auto; max-height: 550px;">
+          <table class="data-table" id="ob-table" style="margin-bottom:0;">
+            <thead style="position: sticky; top: 0; z-index: 10;">
+              <tr>
+                <th style="width: 80px;">Code</th>
+                <th>Name</th>
+                <th style="width: 130px; text-align:right;">Op. Debit (₹)</th>
+                <th style="width: 130px; text-align:right;">Op. Credit (₹)</th>
+              </tr>
+            </thead>
+            <tbody id="ob-table-body">
+              <!-- Populated by OpeningBalanceMaster.renderTable() -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Bottom Summary Section -->
+        <div style="background: #f8fafc; border-top: 1px solid var(--border); padding: 15px; display: grid; grid-template-columns: 1fr 400px; gap: 20px; align-items: end;">
+           <div style="font-size: 12px; color: var(--text-muted);">
+             Note: System will only allow saving once the Total Debit matches the Total Credit.
+           </div>
+           <div>
+             <table style="width: 100%; font-size: 13px; font-variant-numeric: tabular-nums;">
+               <thead>
+                 <tr><th style="text-align:left; color:var(--text-muted); font-size:11px;">Opening Balance</th><th style="text-align:right; padding-right:10px;">Debit</th><th style="text-align:right;">Credit</th></tr>
+               </thead>
+               <tbody>
+                 <tr><td style="padding:4px 0;">Account Totals</td><td style="text-align:right; padding-right:10px;" id="ob_total_dr">₹0.00</td><td style="text-align:right;" id="ob_total_cr">₹0.00</td></tr>
+                 <tr><td style="padding:4px 0;">Member Balance</td><td style="text-align:right; padding-right:10px;" id="ob_member_dr">₹0.00</td><td style="text-align:right;" id="ob_member_cr">₹0.00</td></tr>
+                 <tr style="border-top: 1px solid #cbd5e1; font-weight: 800; color: var(--primary);">
+                   <td style="padding:8px 0;">Final Difference</td>
+                   <td colspan="2" style="text-align:right;" id="ob_difference">❌ Difference: ₹0.00</td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Control Panel -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="card" style="padding: 15px;">
+        <h3 style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Balance Type</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="radio" name="obFilter" value="balance_sheet" checked data-ob-filter="balance_sheet"> Balance Sheet</label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="radio" name="obFilter" value="income_exp" data-ob-filter="income_exp"> Income & Expen.</label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="radio" name="obFilter" value="member" data-ob-filter="member"> Member Balance</label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;"><input type="radio" name="obFilter" value="all" data-ob-filter="all"> Show All</label>
+        </div>
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+        <div style="display: grid; gap: 8px;">
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="AccountMaster.openAddForm()">Add Account</button>
+          <button class="btn-secondary" style="width:100%; justify-content:center;">Alter Account</button>
+          <button class="btn-secondary" style="width:100%; justify-content:center; color: var(--danger);">Delete Account</button>
+        </div>
+      </div>
+      
+      <div class="card" style="padding: 15px; background: var(--accent-soft);">
+        <h3 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Quick Help</h3>
+        <p style="font-size: 11px; line-height: 1.5; color: #475569;">
+          Initializing opening balances is a critical one-time setup. 
+          Assets should have <b>Debit</b> balances, while Liabilities should have <b>Credit</b> balances.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/rbac-engine.js"></script>
+
+</body></html>

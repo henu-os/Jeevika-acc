@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Society Master — Jeevika Accounting</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .kit-dropdown { position: absolute; background: white; border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow-md); z-index: 100; right: 0; min-width: 200px; display: none; flex-direction: column; overflow: hidden; }
+  .kit-dropdown button { padding: 10px 15px; text-align: left; background: none; border: none; font-size: 13px; font-weight: 600; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
+  .kit-dropdown button:hover { background: #f8f9fa; color: var(--primary); }
+  .kit-dropdown button:last-child { border-bottom: none; }
+</style>
+</head>
+<body data-page="society-master">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+<div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+<div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+<div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+<div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div>
+<div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
+<div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div>
+<div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div>
+<div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms & Audit</a></div>
+<div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access & Security</a></div>
+<div class="sidebar-section">───────────</div>
+<div class="sidebar-bottom">
+<div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div>
+<div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help & Documentation</a></div>
+</div></nav></aside>
+
+<div class="main-wrapper">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <div><div class="page-title">Society Master</div><div class="breadcrumb">Home / Masters / Society Master</div></div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-date" id="currentDate"></span>
+    <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div>
+  </div>
+</header>
+
+<main class="page-content">
+  <div class="page-header">
+    <div>
+      <h1>Society Master (Listing Dashboard)</h1>
+      <p>Configure legal identity, internal rules, and manage data collection</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn-primary" data-action="add-society" onclick="if(typeof SocietyMasterFull !== 'undefined') SocietyMasterFull.openForm();">+ Add New Society</button>
+      <button class="btn-secondary" onclick="location.href='masters.html'">Back to Masters</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="card-header" style="border-bottom: 1px solid var(--border); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h3 style="font-size: 14px; font-weight: 700;">Registered Societies / Complexes</h3>
+        <div style="font-size: 11px; color: var(--text-muted);">Central control panel. Select exactly one society to enter its workspace context.</div>
+      </div>
+      <div>
+        <input type="text" id="searchSociety" class="form-input" placeholder="Search by name or ID..." style="width: 250px; padding: 6px 12px; font-size: 12px;">
+      </div>
+    </div>
+    <div style="overflow-x: auto; min-height: 250px; padding-bottom: 50px;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 100px;">Society ID</th>
+            <th>Society Name</th>
+            <th>Address</th>
+            <th style="width: 150px;">Admin Assigned</th>
+            <th style="width: 120px;">Financial Year</th>
+            <th style="width: 180px; text-align: center;">Workspace</th>
+            <th style="width: 180px; text-align: center;">Onboarding Data Kit</th>
+          </tr>
+        </thead>
+        <tbody id="society-table-body">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+      <div id="no-societies-msg" style="display: none; padding: 40px; text-align: center; color: var(--text-muted);">
+        <div style="font-size: 40px; margin-bottom: 10px;">🏢</div>
+        <p>No societies found. Click <strong>+ Add New Society</strong> to start.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="module-info-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+    <div class="card" style="padding: 15px; border-left: 4px solid var(--primary);">
+      <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Workspace Context Switching</h4>
+      <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">Click "Open Workspace" to tunnel into a specific society. All dashboards, masters, and transactions will implicitly run under that Society's standalone Database context.</p>
+    </div>
+    <div class="card" style="padding: 15px; border-left: 4px solid #E11D48;">
+      <h4 style="font-size: 13px; font-weight: 700; color: #E11D48; margin-bottom: 8px;">Super Admin Controls</h4>
+      <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">Super Admins can assign Society Admins. Only designated admins can govern underlying Users within this partition. Toggling "GST Enabled" unhides GST modules.</p>
+    </div>
+    <div class="card" style="padding: 15px; border-left: 4px solid #059669;">
+      <h4 style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 8px;">Data Collection Kits</h4>
+      <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">Directly download predefined physical forms or Excel bulk templates structured specifically with this Society's configured properties (Parking, Flats, Areas). Distribute to users to accelerate onboarding.</p>
+    </div>
+  </div>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script>
+    // Temporarily mock local storage interactions so page loads standalone if js fails
+    if(!localStorage.getItem('jeevika_masters_society')) {
+        localStorage.setItem('jeevika_masters_society', JSON.stringify([
+            { code: 'SOC001', name: 'Green Valley Residency', address: 'Plot 42, Bandra West', contactPerson1: 'Aman', financialYearStart: '01/04/2026', financialYearEnd: '31/03/2027', gstEnabled: false },
+            { code: 'SOC002', name: 'Sunrise Towers', address: 'Wadala TT', contactPerson1: 'Priya', financialYearStart: '01/04/2026', financialYearEnd: '31/03/2027', gstEnabled: true }
+        ]));
+    }
+</script>
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/society-master-full.js"></script>
+<script src="../js/rbac-engine.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    renderSocietyList();
+    document.getElementById('searchSociety').addEventListener('input', renderSocietyList);
+
+    // Global listener to close dropdowns
+    document.addEventListener('click', (e) => {
+        if(!e.target.closest('.kit-toggle')) {
+            document.querySelectorAll('.kit-dropdown').forEach(d => d.style.display = 'none');
+        }
+    });
+});
+
+function toggleKitDropdown(id, btn) {
+    document.querySelectorAll('.kit-dropdown').forEach(d => { if(d.id !== id) d.style.display = 'none'; });
+    const dict = document.getElementById(id);
+    dict.style.display = dict.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function processKitDownload(type, code) {
+    showToast(`Generating ${type} Kit for ${code}...`, 'info');
+    setTimeout(() => {
+        showToast(`${type} Kit generation complete! Check downloads.`);
+    }, 1500);
+}
+
+function openWorkspace(code) {
+    localStorage.setItem('jeevika_active_society', code);
+    showToast(`Workspace switched to ${code}.`, 'success');
+    renderSocietyList();
+}
+
+function renderSocietyList() {
+    const tbody = document.getElementById('society-table-body');
+    if (!tbody) return;
+
+    const societies = SocietyMaster.getAll();
+    const search = document.getElementById('searchSociety').value.toLowerCase();
+    const active = localStorage.getItem('jeevika_active_society');
+
+    let filtered = societies;
+    if (search) {
+        filtered = societies.filter(s => s.name.toLowerCase().includes(search) || s.code.toLowerCase().includes(search));
+    }
+
+    if (filtered.length === 0) {
+        document.getElementById('no-societies-msg').style.display = 'block';
+        tbody.innerHTML = '';
+        return;
+    }
+    document.getElementById('no-societies-msg').style.display = 'none';
+
+    tbody.innerHTML = filtered.map(s => `
+        <tr class="${s.code === active ? 'active-row' : ''}">
+            <td style="font-weight: 700; color: var(--primary);">${s.code}</td>
+            <td><strong>${s.name}</strong></td>
+            <td style="font-size: 11px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.address || '—'}</td>
+            <td style="font-size: 11px;">${typeof SocietyAssignment !== 'undefined' ? (SocietyAssignment.getForSociety(s.code).length > 0 ? 'Assigned ✅' : '<span style="color:var(--danger)">Unassigned ⚠</span>') : '—'}</td>
+            <td style="font-size: 11px;">${s.financialYearStart || '01/04'} - ${s.financialYearEnd || '31/03'}</td>
+            <td style="text-align: center;">
+                <button class="btn-primary" style="padding: 4px 12px; font-size: 11px; ${s.code === active ? 'background:#059669; border-color:#059669;' : ''}" onclick="openWorkspace('${s.code}')">
+                    ${s.code === active ? '★ Active Context' : 'Open Workspace ➔'}
+                </button>
+            </td>
+            <td style="text-align: center; position: relative;">
+                <button class="btn-secondary kit-toggle" style="padding: 4px 12px; font-size: 11px;" onclick="toggleKitDropdown('kit_${s.code}', this)">
+                    📦 Get Kit ▼
+                </button>
+                <div class="kit-dropdown" id="kit_${s.code}">
+                    <div style="padding: 8px 15px; background: #f1f5f9; font-size: 10px; color: #475569; border-bottom: 1px solid #e2e8f0; font-weight: 800; text-transform: uppercase; text-align: left;">1. Member Master Kit</div>
+                    <button onclick="processKitDownload('Excel Template', '${s.code}')">📥 Download Excel Template</button>
+                    <button onclick="processKitDownload('PDF Form', '${s.code}')">📄 Generate PDF Form</button>
+                    <div style="padding: 8px 15px; background: #f1f5f9; font-size: 10px; color: #475569; border-bottom: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; font-weight: 800; text-transform: uppercase; text-align: left;">2. System Operations</div>
+                    <button onclick="if(typeof SocietyMasterFull !== 'undefined') SocietyMasterFull.openForm('${s.code}')">⚙️ Society Configuration</button>
+                    <button onclick="location.href='access-security.html'">🔐 Manage Access & Roles</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+</script>
+</body>
+</html>

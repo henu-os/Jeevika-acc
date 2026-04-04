@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Bank Reconciliation — Jeevika Accounting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <style>
+        .page-content { padding: 20px; }
+        .summary-card { padding: 15px; border-radius: 8px; border: 1px solid var(--border); background: white; text-align: center; }
+        .summary-card .label { font-size: 13px; color: var(--text-muted); }
+        .summary-card .value { font-size: 20px; font-weight: 800; margin-top: 5px; color: var(--text-primary); }
+        .summary-card.success .value { color: var(--success); }
+        .summary-card.danger .value { color: var(--danger); }
+        .table-wrap { background: white; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8f9fa; padding: 12px; font-size: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        td { padding: 12px; font-size: 13px; border-bottom: 1px solid #eee; }
+        .row-matched { background: #e8f5e9; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+        <nav class="sidebar-nav">
+            <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+            <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+            <div class="nav-item"><a href="transactions.html" class="active"><span class="icon">💰</span> Transactions</a></div>
+            <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <div><div class="page-title">Bank Reconciliation</div><div class="breadcrumb">Transactions / Bank Reconciliation</div></div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="page-header"><div><h1>Bank Reconciliation</h1><p>Match book entries with bank statement to track discrepancies.</p></div></div>
+            
+            <div class="card" style="margin-bottom:20px;">
+                <div style="display:flex; gap:20px; align-items:flex-end;">
+                    <div class="form-group" style="flex:1;"><label class="form-label">Bank Account</label>
+                        <select id="bankAcc" class="form-input select2">
+                            <option value="HDFC">HDFC Bank A/C — XXXX4521</option>
+                            <option value="SBI">SBI — XXXX8912</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="width:150px;"><label class="form-label">From Date</label><input type="text" id="fromDate" class="form-input date-picker"></div>
+                    <div class="form-group" style="width:150px;"><label class="form-label">To Date</label><input type="text" id="toDate" class="form-input date-picker"></div>
+                    <div class="form-group">
+                        <button class="btn-primary" onclick="loadEntries()">Load Entries</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom: 20px;">
+                <div class="table-wrap">
+                    <div style="padding: 15px; border-bottom: 1px solid var(--border); background:#fdfdfd; display:flex; justify-content:space-between;">
+                        <h3 style="font-weight:700;">📚 Book Entries</h3>
+                        <button class="btn-secondary" style="padding: 4px 10px; font-size:12px;" onclick="autoMatch()">🔄 Auto Match</button>
+                    </div>
+                    <table id="bookTable">
+                        <thead><tr><th><input type="checkbox" onclick="selectAllBooks(this)"></th><th>Date</th><th>Ref No.</th><th>Type</th><th>Particulars</th><th class="amount">Debit</th><th class="amount">Credit</th></tr></thead>
+                        <tbody id="bookBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="table-wrap">
+                     <div style="padding: 15px; border-bottom: 1px solid var(--border); background:#fdfdfd; display:flex; justify-content:space-between;">
+                        <h3 style="font-weight:700;">🏦 Bank Statement</h3>
+                        <button class="btn-secondary" style="padding: 4px 10px; font-size:12px;" onclick="document.getElementById('uploadStmt').click()">📥 Upload</button>
+                        <input type="file" id="uploadStmt" style="display:none;" onchange="handleUpload(this)">
+                    </div>
+                    <table id="stmtTable">
+                         <thead><tr><th><input type="checkbox" onclick="selectAllStmts(this)"></th><th>Date</th><th>Ref No.</th><th>Description</th><th class="amount">Debit</th><th class="amount">Credit</th></tr></thead>
+                         <tbody id="stmtBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:20px;">
+                <div class="summary-card">
+                    <div class="label">Balance as per Books</div>
+                    <div class="value" id="bookBal">₹0.00</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Balance as per Bank</div>
+                    <div class="value" id="bankBal">₹0.00</div>
+                </div>
+                <div class="summary-card danger" id="unrecCard">
+                    <div class="label">Unreconciled Difference</div>
+                    <div class="value" id="diffAmt">₹0.00</div>
+                </div>
+                <div class="summary-card" style="display:flex; align-items:center; justify-content:center; background:#f0f4f8;">
+                    <button class="btn-primary" style="width:100%;" onclick="saveReconciliation()">Save Reconciliation</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../js/global.js"></script>
+    <script src="../js/transactions-brain.js"></script>
+    <script>
+        // Dummy data generation
+        let bookData = [];
+        let stmtData = [];
+
+        $(document).ready(function() {
+            $('.select2').select2({ width: '100%' });
+            flatpickr(".date-picker", { dateFormat: "d/m/Y", defaultDate: "today" });
+        });
+
+        function loadEntries() {
+            showToast('Loading data...', 'info');
+            
+            // Dummy Data
+            bookData = [
+                { id: 'b1', date: '05/04/2026', ref: 'R-001', type: 'Receipt', desc: 'Maintenance Rcp', dr: 6510, cr: 0, matched: false },
+                { id: 'b2', date: '10/04/2026', ref: 'P-001', type: 'Payment', desc: 'MSEB Electricity', dr: 0, cr: 12500, matched: false },
+                { id: 'b3', date: '12/04/2026', ref: 'R-002', type: 'Receipt', desc: 'Sinking Fund Rcp', dr: 5000, cr: 0, matched: false },
+                { id: 'b4', date: '15/04/2026', ref: 'C-001', type: 'Contra', desc: 'Cash Deposited', dr: 10000, cr: 0, matched: false }
+            ];
+
+            stmtData = [
+                { id: 's1', date: '05/04/2026', ref: 'NEFT992', desc: 'NEFT CR-MAINT', dr: 6510, cr: 0, matched: false },
+                { id: 's2', date: '11/04/2026', ref: 'CHQ412', desc: 'CHQ DR-MSEB', dr: 0, cr: 12500, matched: false },
+                { id: 's3', date: '15/04/2026', ref: 'DEP11', desc: 'CASH DEP BR-44', dr: 10000, cr: 0, matched: false },
+                { id: 's4', date: '16/04/2026', ref: 'CHGBNK', desc: 'BANK CHARGES', dr: 0, cr: 118, matched: false }
+            ];
+
+            renderTables();
+        }
+
+        function renderTables() {
+            const bBody = document.getElementById('bookBody');
+            bBody.innerHTML = bookData.map(b => `
+                <tr class="${b.matched ? 'row-matched' : ''}">
+                    <td><input type="checkbox" class="cb-book" data-id="${b.id}" ${b.matched ? 'checked disabled' : ''}></td>
+                    <td>${b.date}</td>
+                    <td>${b.ref}</td>
+                    <td>${b.type}</td>
+                    <td>${b.desc}</td>
+                    <td class="amount">${b.dr > 0 ? formatCurrency(b.dr) : '-'}</td>
+                    <td class="amount">${b.cr > 0 ? formatCurrency(b.cr) : '-'}</td>
+                </tr>
+            `).join('');
+
+            const sBody = document.getElementById('stmtBody');
+            sBody.innerHTML = stmtData.map(s => `
+                <tr class="${s.matched ? 'row-matched' : ''}">
+                    <td><input type="checkbox" class="cb-stmt" data-id="${s.id}" ${s.matched ? 'checked disabled' : ''}></td>
+                    <td>${s.date}</td>
+                    <td>${s.ref}</td>
+                    <td>${s.desc}</td>
+                    <td class="amount">${s.dr > 0 ? formatCurrency(s.dr) : '-'}</td>
+                    <td class="amount">${s.cr > 0 ? formatCurrency(s.cr) : '-'}</td>
+                </tr>
+            `).join('');
+
+            calcTotals();
+        }
+
+        function handleUpload(input) {
+            showToast('Mocking Statement Upload...', 'info');
+            setTimeout(() => {
+                showToast('Statement Uploaded & Parsed successfully');
+                loadEntries();
+            }, 1000);
+        }
+
+        function autoMatch() {
+            let matchedCount = 0;
+            bookData.forEach(b => {
+                if(!b.matched) {
+                    const match = stmtData.find(s => !s.matched && s.dr === b.dr && s.cr === b.cr);
+                    if(match) {
+                        b.matched = true;
+                        match.matched = true;
+                        matchedCount++;
+                    }
+                }
+            });
+            renderTables();
+            showToast(`Auto-matched ${matchedCount} entries`, 'success');
+        }
+
+        function calcTotals() {
+            let bDr = 0, bCr = 0, sDr = 0, sCr = 0;
+            bookData.forEach(b => { 
+                if(!b.matched) { bDr += b.dr; bCr += b.cr; }
+            });
+            stmtData.forEach(s => { 
+                if(!s.matched) { sDr += s.dr; sCr += s.cr; }
+            });
+
+            // Very simplified reconciliation logic for demo purposes
+            let bookDiff = bDr - bCr;
+            let stmtDiff = sDr - sCr;
+            let totalDiff = Math.abs(bookDiff - stmtDiff);
+
+            document.getElementById('bookBal').textContent = formatCurrency(Math.abs(bookDiff));
+            document.getElementById('bankBal').textContent = formatCurrency(Math.abs(stmtDiff));
+            
+            const uCard = document.getElementById('unrecCard');
+            if(totalDiff === 0) {
+                document.getElementById('diffAmt').textContent = '₹0.00 ✓';
+                uCard.className = 'summary-card success';
+            } else {
+                document.getElementById('diffAmt').textContent = formatCurrency(totalDiff);
+                uCard.className = 'summary-card danger';
+            }
+        }
+
+        function selectAllBooks(m) { document.querySelectorAll('.cb-book:not([disabled])').forEach(cb => cb.checked = m.checked); }
+        function selectAllStmts(m) { document.querySelectorAll('.cb-stmt:not([disabled])').forEach(cb => cb.checked = m.checked); }
+
+        function saveReconciliation() {
+            // Get selected manuals and match them if dr/cr match
+            const selBooks = Array.from(document.querySelectorAll('.cb-book:checked:not([disabled])')).map(c => c.dataset.id);
+            const selStmts = Array.from(document.querySelectorAll('.cb-stmt:checked:not([disabled])')).map(c => c.dataset.id);
+            
+            if(selBooks.length === 0 && selStmts.length === 0 && document.getElementById('diffAmt').textContent !== '₹0.00 ✓') {
+                showToast('Please match entries or resolve differences first.', 'error');
+                return;
+            }
+
+            const record = {
+                id: 'REC-' + Date.now(),
+                date: new Date().toLocaleDateString('en-GB'),
+                bank: document.getElementById('bankAcc').value,
+                bookBal: document.getElementById('bookBal').textContent,
+                bankBal: document.getElementById('bankBal').textContent
+            };
+
+            TransactionsBrain.saveBankReco(record);
+            showToast('Bank Reconciliation Saved Successfully!', 'success');
+        }
+    </script>
+</body>
+</html>
