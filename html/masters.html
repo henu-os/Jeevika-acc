@@ -1,36 +1,372 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Masters — Jeevika Accounting</title><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/global.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"><link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"></head><body><aside class="sidebar" id="sidebar"><div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div><nav class="sidebar-nav"><div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div><div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div><div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div><div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div><div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div><div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div><div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div><div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div><div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div><div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div><div class="sidebar-section">───────────</div><div class="sidebar-bottom"><div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div><div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div></div></nav></aside><div class="main-wrapper"><header class="topbar"><div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><div class="page-title">Masters</div><div class="breadcrumb">Home / Masters</div></div></div><div class="topbar-center"><div class="search-wrap"><input type="text" class="search-bar" placeholder="Search..."></div></div><div class="topbar-right"><span class="topbar-date" id="currentDate"></span><button class="topbar-icon">🔔<span class="notif-badge">3</span></button><button class="topbar-icon">⊞</button><button class="topbar-icon">🛡️</button><button class="topbar-icon">✉️</button><button class="topbar-icon">⚙️</button><div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div><span style="font-size:10px;color:var(--text-muted)">▼</span></div></div></header><main class="page-content">
-<div class="page-header"><div><h1>Masters</h1><p>Manage your society's core data</p></div><button class="btn-primary">+ Add New</button></div>
-<div class="module-grid">
-<div class="card module-card" onclick="location.href='society-master.html'"><div class="mc-icon">🏢</div><h3>Society Master</h3><p>Profile and basic setup</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='member-master.html'"><div class="mc-icon">👥</div><h3>Member Master</h3><p>KYC and owner data</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='account-master.html'"><div class="mc-icon">📁</div><h3>Account Master</h3><p>Chart of accounts</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='group-master.html'"><div class="mc-icon">📓</div><h3>Group Master</h3><p>Account grouping</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='billing-master.html'"><div class="mc-icon">🧾</div><h3>Billing Master</h3><p>Charge heads setup</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='area-master.html'"><div class="mc-icon">📍</div><h3>Area Master</h3><p>Flat area setup</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='gst-master.html'"><div class="mc-icon">%</div><h3>GST Master</h3><p>Slabs and HSN codes</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='opening-bank.html'"><div class="mc-icon">🏦</div><h3>Opening Bank Record</h3><p>Initial bank balances</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='opening-balances.html'"><div class="mc-icon">⚖️</div><h3>Opening Balances</h3><p>Member balances</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='bill-print-setup.html'"><div class="mc-icon">🖨️</div><h3>Bill Print Setup</h3><p>Print templates</p><div class="mc-footer"><span class="mc-badge">🔴 Logo Script Fix</span></div></div>
-<div class="card module-card" onclick="location.href='servant-master.html'"><div class="mc-icon">👤</div><h3>Servant Master</h3><p>Helper data entry</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='fixed-deposit.html'"><div class="mc-icon">🏦</div><h3>Fixed Deposit</h3><p>FD tracking</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='committee-master.html'"><div class="mc-icon">👥</div><h3>Committee Master</h3><p>Committee data</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-<div class="card module-card" onclick="location.href='vendor-master.html'"><div class="mc-icon">👨‍💼</div><h3>Vendor Master</h3><p>Vendor directory</p><div class="mc-footer"><span class="mc-badge">✅ Perfect</span></div></div>
-</div></main></div><script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script><script src="https://cdn.jsdelivr.net/npm/flatpickr"></script><script src="../js/global.js"></script><script src="../js/masters-brain.js"></script><script src="../js/society-master-full.js"></script><script src="../js/mongo-sync.js"></script><script src="../js/rbac-engine.js"></script>    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Interconnect real counts
-            const members = MemberMaster.getAll();
-            const accounts = AccountMaster.getAll();
-            const groups = dbRead('jeevika_groups');
-            const bills = BillSetting.getAll();
-            const area = dbRead('jeevika_members'); // Using members as proxy for area setup completeness
-            
-            const badges = document.querySelectorAll('.mc-badge');
-            if (badges[1]) badges[1].textContent = members.length + ' Members';
-            if (badges[2]) badges[2].textContent = accounts.length + ' Accounts';
-            if (badges[3]) badges[3].textContent = groups.length + ' Groups';
-            if (badges[4]) badges[4].textContent = bills.length + ' Bill Types';
-            if (badges[5]) badges[5].textContent = members.length + ' Flats';
-        });
-    </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Masters — Jeevika Accounting</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<style>
+  /* Module Grid layout */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .module-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 18px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(45,27,105,0.07);
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(124,92,191,0.15);
+    transform: translateY(-2px);
+  }
+  .module-card .mc-icon {
+    font-size: 28px;
+    width: 52px; height: 52px;
+    background: var(--accent-soft);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .module-card h3 { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  .module-card p  { font-size: 12px; color: var(--text-muted); margin: 0; }
+  .module-card .mc-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .mc-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-block;
+  }
+  /* Quick Add dropdown */
+  .quick-add-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(45,27,105,0.16);
+    z-index: 1000;
+    min-width: 220px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: all 0.18s;
+    pointer-events: none;
+  }
+  .quick-add-dropdown.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+  .qa-header {
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    background: #faf9fe;
+  }
+  .qa-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .qa-item:hover { background: var(--accent-soft); color: var(--primary); }
+  .qa-item .qa-icon { font-size: 16px; width: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+    <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+    <div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+    <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+    <div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div>
+    <div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
+    <div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div>
+    <div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div>
+    <div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div>
+    <div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div>
+    <div class="sidebar-section">───────────</div>
+    <div class="sidebar-bottom">
+      <div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div>
+      <div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div>
+    </div>
+  </nav>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div><div class="page-title">Masters</div><div class="breadcrumb">Home / Masters</div></div>
+    </div>
+    <div class="topbar-center">
+      <div class="search-wrap"><input type="text" class="search-bar" id="masters-search" placeholder="Search modules..." oninput="filterMasterCards(this.value)"></div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date" id="currentDate"></span>
+      <button class="topbar-icon">🔔<span class="notif-badge">3</span></button>
+      <button class="topbar-icon">⊞</button>
+      <button class="topbar-icon">🛡️</button>
+      <button class="topbar-icon">✉️</button>
+      <button class="topbar-icon">⚙️</button>
+      <div class="topbar-profile">
+        <div class="avatar">A</div>
+        <div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div>
+        <span style="font-size:10px;color:var(--text-muted)">▼</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Masters</h1>
+        <p>Manage your society's core data</p>
+      </div>
+      <!-- Quick Add Button with Dropdown -->
+      <div style="position:relative;">
+        <button class="btn-primary" id="btn-quick-add" onclick="toggleQuickAdd(event)">+ Add New ▾</button>
+        <div class="quick-add-dropdown" id="quick-add-dropdown">
+          <div class="qa-header">Quick Add</div>
+          <button class="qa-item" onclick="navigateTo('society-master.html')"><span class="qa-icon">🏢</span> Society</button>
+          <button class="qa-item" onclick="quickAddMember()"><span class="qa-icon">👥</span> Member</button>
+          <button class="qa-item" onclick="quickAddAccount()"><span class="qa-icon">📁</span> Account</button>
+          <button class="qa-item" onclick="quickAddGroup()"><span class="qa-icon">📓</span> Group</button>
+          <button class="qa-item" onclick="navigateTo('billing-master.html')"><span class="qa-icon">🧾</span> Billing Setup</button>
+          <button class="qa-item" onclick="navigateTo('gst-master.html')"><span class="qa-icon">%</span> GST Mapping</button>
+          <div class="qa-header" style="margin-top:4px;">More</div>
+          <button class="qa-item" onclick="navigateTo('vendor-master.html')"><span class="qa-icon">👨‍💼</span> Vendor</button>
+          <button class="qa-item" onclick="navigateTo('committee-master.html')"><span class="qa-icon">👥</span> Committee Member</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module Grid -->
+    <div class="module-grid" id="masters-grid">
+      <div class="card module-card" data-name="Society Master" onclick="location.href='society-master.html'">
+        <div class="mc-icon">🏢</div>
+        <h3>Society Master</h3>
+        <p>Profile and basic setup</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-society">Loading...</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Member Master" onclick="location.href='member-master.html'">
+        <div class="mc-icon">👥</div>
+        <h3>Member Master</h3>
+        <p>KYC and owner data</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-member">0 Members</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Account Master" onclick="location.href='account-master.html'">
+        <div class="mc-icon">📁</div>
+        <h3>Account Master</h3>
+        <p>Chart of accounts</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-account">0 Accounts</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Group Master" onclick="location.href='group-master.html'">
+        <div class="mc-icon">📓</div>
+        <h3>Group Master</h3>
+        <p>Account grouping</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-group">0 Groups</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Billing Master" onclick="location.href='billing-master.html'">
+        <div class="mc-icon">🧾</div>
+        <h3>Billing Master</h3>
+        <p>Charge heads setup</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-billing">0 Bill Types</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Area Master" onclick="location.href='area-master.html'">
+        <div class="mc-icon">📍</div>
+        <h3>Area Master</h3>
+        <p>Flat area setup</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-area">0 Flats</span></div>
+      </div>
+
+      <div class="card module-card" data-name="GST Master" onclick="location.href='gst-master.html'">
+        <div class="mc-icon">%</div>
+        <h3>GST Master</h3>
+        <p>Slabs and HSN codes</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-gst">0 Mappings</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Opening Bank Record" onclick="location.href='opening-bank.html'">
+        <div class="mc-icon">🏦</div>
+        <h3>Opening Bank Record</h3>
+        <p>Initial bank balances</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-bank">0 Banks</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Opening Balances" onclick="location.href='opening-balances.html'">
+        <div class="mc-icon">⚖️</div>
+        <h3>Opening Balances</h3>
+        <p>Member balances</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-ob">0 Entries</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Bill Print Setup" onclick="location.href='bill-print-setup.html'">
+        <div class="mc-icon">🖨️</div>
+        <h3>Bill Print Setup</h3>
+        <p>Print templates</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-print">✅ Configure</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Servant Master" onclick="location.href='servant-master.html'">
+        <div class="mc-icon">👤</div>
+        <h3>Servant Master</h3>
+        <p>Helper data entry</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-servant">0 Records</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Fixed Deposit" onclick="location.href='fixed-deposit.html'">
+        <div class="mc-icon">🏦</div>
+        <h3>Fixed Deposit</h3>
+        <p>FD tracking</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-fd">0 FDs</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Committee Master" onclick="location.href='committee-master.html'">
+        <div class="mc-icon">👥</div>
+        <h3>Committee Master</h3>
+        <p>Committee data</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-committee">0 Members</span></div>
+      </div>
+
+      <div class="card module-card" data-name="Vendor Master" onclick="location.href='vendor-master.html'">
+        <div class="mc-icon">👨‍💼</div>
+        <h3>Vendor Master</h3>
+        <p>Vendor directory</p>
+        <div class="mc-footer"><span class="mc-badge" id="badge-vendor">0 Vendors</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="../js/global.js"></script>
+<script src="../js/masters-brain.js"></script>
+<script src="../js/society-master-full.js"></script>
+<script src="../js/mongo-sync.js"></script>
+<script src="../js/rbac-engine.js"></script>
+<script>
+// ── Quick Add Dropdown ─────────────────────────
+function toggleQuickAdd(e) {
+  e.stopPropagation();
+  var dd = document.getElementById('quick-add-dropdown');
+  dd.classList.toggle('show');
+}
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('quick-add-dropdown');
+  if (!e.target.closest('#btn-quick-add') && !e.target.closest('#quick-add-dropdown')) {
+    if (dd) dd.classList.remove('show');
+  }
+});
+
+function navigateTo(url) {
+  location.href = url;
+}
+
+function quickAddMember() {
+  document.getElementById('quick-add-dropdown').classList.remove('show');
+  if (typeof MemberMaster !== 'undefined') MemberMaster.openAddForm();
+  else navigateTo('member-master.html');
+}
+function quickAddAccount() {
+  document.getElementById('quick-add-dropdown').classList.remove('show');
+  if (typeof AccountMaster !== 'undefined') AccountMaster.openAddForm();
+  else navigateTo('account-master.html');
+}
+function quickAddGroup() {
+  document.getElementById('quick-add-dropdown').classList.remove('show');
+  if (typeof GroupMaster !== 'undefined') GroupMaster.openAddForm();
+  else navigateTo('group-master.html');
+}
+
+// ── Search Filter ──────────────────────────────
+function filterMasterCards(query) {
+  var q = query.toLowerCase().trim();
+  document.querySelectorAll('#masters-grid .module-card').forEach(function(card) {
+    var name = (card.dataset.name || '').toLowerCase();
+    var text = card.textContent.toLowerCase();
+    card.style.display = (!q || name.includes(q) || text.includes(q)) ? '' : 'none';
+  });
+}
+
+// ── Live Badges ────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  // Read data
+  var members   = JSON.parse(localStorage.getItem('jeevika_members') || '[]');
+  var accounts  = JSON.parse(localStorage.getItem('jeevika_accounts') || '[]');
+  var groups    = JSON.parse(localStorage.getItem('jeevika_groups') || '[]');
+  var billTypes = JSON.parse(localStorage.getItem('jeevika_bill_types') || '[]');
+  var gstList   = JSON.parse(localStorage.getItem('jeevika_gst_master') || '[]');
+  var bankReco  = JSON.parse(localStorage.getItem('jeevika_opening_bank_reco') || '[]');
+  var obEntries = JSON.parse(localStorage.getItem('jeevika_opening_balances') || '[]');
+  var societies = JSON.parse(localStorage.getItem('jeevika_societies') || '[]');
+  var servants  = JSON.parse(localStorage.getItem('jeevika_servants') || '[]');
+  var fds       = JSON.parse(localStorage.getItem('jeevika_fixed_deposits') || '[]');
+  var committee = JSON.parse(localStorage.getItem('jeevika_committee') || '[]');
+  var vendors   = JSON.parse(localStorage.getItem('jeevika_vendors') || '[]');
+
+  function setBadge(id, text, color) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    if (color) el.style.color = color;
+  }
+
+  // Society badge
+  var activeSocCode = localStorage.getItem('jeevika_active_society') || '';
+  var activeSoc = societies.find(function(s){ return s.code === activeSocCode; });
+  setBadge('badge-society', activeSoc ? ('✅ ' + activeSoc.name) : (societies.length > 0 ? societies.length + ' Societies' : '🔴 Setup Required'));
+
+  setBadge('badge-member',   members.length > 0 ? members.length + ' Members' : '0 Members');
+  setBadge('badge-account',  accounts.length > 0 ? accounts.length + ' Accounts' : '0 Accounts');
+  setBadge('badge-group',    groups.length > 0 ? groups.length + ' Groups' : '0 Groups');
+  setBadge('badge-billing',  billTypes.length > 0 ? billTypes.length + ' Bill Types' : '0 Bill Types');
+  setBadge('badge-area',     members.length + ' Flats');
+  setBadge('badge-gst',      gstList.length > 0 ? gstList.length + ' Mappings' : '0 Mappings');
+  setBadge('badge-bank',     bankReco.length + ' Banks');
+  setBadge('badge-ob',       obEntries.length + ' Entries');
+  setBadge('badge-servant',  servants.length + ' Records');
+  setBadge('badge-fd',       fds.length + ' FDs');
+  setBadge('badge-committee',committee.length + ' Members');
+  setBadge('badge-vendor',   vendors.length + ' Vendors');
+});
+</script>
 </body>
 </html>

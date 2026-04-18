@@ -3,6 +3,14 @@
    Full-featured: Auth, Export, Print, UI
    ════════════════════════════════════════════════ */
 
+// ─── SIDEBAR HOVER SYSTEM (Global Script Injection) ───
+const script = document.createElement('script');
+script.src = '../js/sidebar-hover.js'; 
+// Use relative pathing based on whether we are in /html or /
+if (window.location.pathname.includes('/html/')) script.src = '../js/sidebar-hover.js';
+else if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) script.src = 'js/sidebar-hover.js';
+document.head.appendChild(script);
+
 // ─── AUTH SYSTEM (localStorage) ───
 const JeevikaAuth = {
   USERS_KEY: 'jeevika_users',
@@ -55,10 +63,13 @@ const JeevikaAuth = {
     this.syncSocietyInfo();
   },
   syncSocietyInfo() {
-    const activeSoc = JSON.parse(localStorage.getItem('jeevika_active_society') || '{}');
+    // jeevika_active_society stores the code string, societies are in jeevika_societies
+    const activeCode = localStorage.getItem('jeevika_active_society') || '';
+    const societies = JSON.parse(localStorage.getItem('jeevika_societies') || '[]');
+    const activeSoc = societies.find(s => s.code === activeCode) || null;
     const breadcrumb = document.querySelector('.breadcrumb');
-    if (activeSoc.name && breadcrumb) {
-        breadcrumb.innerHTML = `<span style="color:var(--accent); font-weight:700;">\u{1F3E2} ${activeSoc.name}</span> | <span style="font-weight:600;">\u{1F4C5} ${activeSoc.financialYear || 'FY Not Selected'}</span>`;
+    if (activeSoc && activeSoc.name && breadcrumb) {
+        breadcrumb.innerHTML = `<span style="color:var(--accent); font-weight:700;">\u{1F3E2} ${activeSoc.name}</span> | <span style="font-weight:600;">\u{1F4C5} ${activeSoc.financialYear || (activeSoc.financialYearStart ? activeSoc.financialYearStart.substring(0,4) + '-' + (activeSoc.financialYearEnd || '').substring(2,4) : 'FY Not Set')}</span>`;
     }
   }
 };
@@ -369,4 +380,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (key === 'k') { e.preventDefault(); location.href = 'bank-reconciliation.html'; }
     }
   });
+});
+
+// ─── MDI INTEGRATION ───
+// Allows modules to open other modules as windows in the MDI Shell
+function openMDIWindow(url, title) {
+  if (window.parent && window.parent.JeevikaMDI) {
+    window.parent.JeevikaMDI.openWindow(url, title);
+  } else {
+    window.location.href = url;
+  }
+}
+
+// Redirect standard module links to MDI windows if in shell
+document.addEventListener('click', e => {
+  const link = e.target.closest('a');
+  if (link && window.parent && window.parent.JeevikaMDI) {
+    const href = link.getAttribute('href');
+    if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+      e.preventDefault();
+      window.parent.JeevikaMDI.openWindow(href, link.textContent.trim() || 'Module');
+    }
+  }
 });

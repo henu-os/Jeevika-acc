@@ -5,50 +5,367 @@
 <title>GST Master — Jeevika Accounting</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/global.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-
+<style>
+.gst-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.gst-yes{background:#dcfce7;color:#166534}.gst-no{background:#fee2e2;color:#991b1b}
+.gst-active{background:#dbeafe;color:#1e40af}.gst-exempt{background:#fef3c7;color:#92400e}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:28px;width:520px;max-width:95vw;box-shadow:0 8px 40px rgba(45,27,105,.22)}
+</style>
 </head>
 <body>
 <aside class="sidebar" id="sidebar">
-<div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
-<nav class="sidebar-nav">
-<div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
-<div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
-<div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
-<div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
-<div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div>
-<div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
-<div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div>
-<div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div>
-<div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div>
-<div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div>
-<div class="sidebar-section">───────────</div>
-<div class="sidebar-bottom">
-<div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div>
-<div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div>
-</div></nav></aside>
+  <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+    <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+    <div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+    <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+    <div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
+  </nav>
+</aside>
 <div class="main-wrapper">
-<header class="topbar"><div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><div class="page-title">GST Master</div><div class="breadcrumb">Home / Masters / GST Master</div></div></div><div class="topbar-center"><div class="search-wrap"><input type="text" class="search-bar" placeholder="Search..."></div></div><div class="topbar-right"><span class="topbar-date" id="currentDate"></span><button class="topbar-icon">🔔<span class="notif-badge">3</span></button><button class="topbar-icon">⊞</button><button class="topbar-icon">🛡️</button><button class="topbar-icon">✉️</button><button class="topbar-icon">⚙️</button><div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div><span style="font-size:10px;color:var(--text-muted)">▼</span></div></div></header>
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <div><div class="page-title">GST Master</div><div class="breadcrumb">Home / Masters / GST Master</div></div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-date" id="currentDate"></span>
+    <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div>
+  </div>
+</header>
 <main class="page-content">
-<div class="page-header"><div><h1>GST Master</h1><p>GST Master</p></div>
-<div class="btn-group"><button class="btn-secondary">📤 Export</button><button class="btn-primary" onclick="openModal('addModal')">+ Add New</button></div></div>
-<div class="card"><table class="data-table"><thead><tr><th>Account Head</th><th>GST %</th><th>CGST %</th><th>SGST %</th><th>IGST %</th><th>HSN/SAC</th><th>Auto-Compute</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td>Maintenance Charges</td><td>18%</td><td>9%</td><td>9%</td><td>18%</td><td>9972</td><td><span class="badge badge-success">Yes</span></td><td><span class="badge badge-success">Active</span></td></tr>
-<tr><td>Parking Charges</td><td>18%</td><td>9%</td><td>9%</td><td>18%</td><td>9972</td><td><span class="badge badge-success">Yes</span></td><td><span class="badge badge-success">Active</span></td></tr>
-<tr><td>Water Charges</td><td>0%</td><td>0%</td><td>0%</td><td>0%</td><td>—</td><td><span class="badge badge-info">No</span></td><td><span class="badge badge-success">Active</span></td></tr></tbody></table></div>
-<div class="modal-overlay" id="addModal"><div class="modal"><div class="modal-header"><h3>Add GST</h3><button class="modal-close" onclick="closeModal('addModal')">✕</button></div>
-<div class="modal-body"><div class="form-group"><label class="form-label">Account Head</label><select class="form-input select2"><option>Maintenance Charges</option><option>Parking Charges</option><option>Water Charges</option><option>Electricity Charges</option><option>NOC Charges</option></select></div>
-<div class="form-group"><label class="form-label">GST %</label><select class="form-input select2"><option>0</option><option>5</option><option>12</option><option>18</option><option>28</option></select></div>
-<div class="form-group"><label class="form-label">HSN/SAC Code</label><input type="text" class="form-input" placeholder="9972" ></div>
-<div class="form-group"><label class="form-label">Auto-Compute</label><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div></div>
-<div class="modal-footer"><button class="btn-secondary" onclick="closeModal('addModal')">Cancel</button><button class="btn-primary" onclick="showToast('Saved successfully');closeModal('addModal')">Save</button></div></div></div>
+  <div class="page-header">
+    <div>
+      <h1>GST Master (Society Level)</h1>
+      <p>Configure GST slabs and account head mappings for the society — not per member</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn-secondary" onclick="exportGST()">📤 Export</button>
+      <button class="btn-primary" onclick="openAddModal()">+ Add GST Head</button>
+      <button class="btn-secondary" onclick="location.href='masters.html'">Exit</button>
+    </div>
+  </div>
+
+  <!-- Society GSTIN Banner -->
+  <div id="gstBanner" class="card" style="margin-bottom:16px;padding:14px 18px;background:linear-gradient(135deg,#EDE8F8,#F4F1FB);border:1px solid #C4BAE8">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#2D1B69">🏢 Society GST Configuration</div>
+        <div id="societyGSTInfo" style="font-size:12px;color:#5A5380;margin-top:4px">Loading society GST info...</div>
+      </div>
+      <div id="gstStatus" style="font-size:14px;font-weight:800"></div>
+    </div>
+  </div>
+
+  <!-- GST Account Head Table -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border)">
+      <h3 style="font-weight:700;font-size:14px">Account Head GST Rate Mapping</h3>
+      <div style="font-size:11px;color:var(--text-muted)">GST applies to entire society billing — not individual members</div>
+    </div>
+    <table class="data-table" id="gstTable" style="font-size:12px">
+      <thead>
+        <tr>
+          <th>Sr.</th>
+          <th>Account Head</th>
+          <th>HSN / SAC Code</th>
+          <th style="text-align:center">GST %</th>
+          <th style="text-align:center">CGST %</th>
+          <th style="text-align:center">SGST %</th>
+          <th style="text-align:center">IGST %</th>
+          <th style="text-align:center">GST Type</th>
+          <th style="text-align:center">Taxable</th>
+          <th style="text-align:center">Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="gstTbody"></tbody>
+    </table>
+  </div>
+
+  <!-- GST Summary Card -->
+  <div class="card" style="margin-top:16px">
+    <h3 style="font-weight:700;margin-bottom:12px">📊 GST Collection Summary (Current Period)</h3>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+      <div style="background:#F4F1FB;border-radius:8px;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600">Taxable Amount</div>
+        <div id="sumTaxable" style="font-size:20px;font-weight:800;color:#2D1B69;margin-top:4px">₹0</div>
+      </div>
+      <div style="background:#EFF6FF;border-radius:8px;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600">CGST</div>
+        <div id="sumCGST" style="font-size:20px;font-weight:800;color:#1D4ED8;margin-top:4px">₹0</div>
+      </div>
+      <div style="background:#F0FDF4;border-radius:8px;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600">SGST</div>
+        <div id="sumSGST" style="font-size:20px;font-weight:800;color:#166534;margin-top:4px">₹0</div>
+      </div>
+      <div style="background:#FFF7ED;border-radius:8px;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600">Total GST</div>
+        <div id="sumTotal" style="font-size:20px;font-weight:800;color:#B45309;margin-top:4px">₹0</div>
+      </div>
+    </div>
+  </div>
 </main>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="gstModal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <h3 id="modalTitle" style="font-weight:700;font-size:15px">Add GST Head</h3>
+      <button onclick="closeModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#888">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Account Head (from Account Master) *</label>
+      <div style="display:flex;gap:8px">
+        <select class="form-input" id="gm_account" style="flex:1"></select>
+        <button class="btn-secondary" onclick="loadAccountsIntoSelect()" title="Refresh from Account Master" style="padding:0 12px">🔄</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">HSN / SAC Code</label>
+        <input type="text" class="form-input" id="gm_hsn" placeholder="e.g. 9972"></div>
+      <div class="form-group"><label class="form-label">GST Slab</label>
+        <select class="form-input" id="gm_rate" onchange="splitGST()">
+          <option value="0">0%</option><option value="5">5%</option>
+          <option value="12">12%</option><option value="18" selected>18%</option>
+          <option value="28">28%</option>
+        </select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">CGST %</label>
+        <input type="number" class="form-input" id="gm_cgst" value="9" step="0.5" min="0"></div>
+      <div class="form-group"><label class="form-label">SGST %</label>
+        <input type="number" class="form-input" id="gm_sgst" value="9" step="0.5" min="0"></div>
+      <div class="form-group"><label class="form-label">IGST %</label>
+        <input type="number" class="form-input" id="gm_igst" value="18" step="0.5" min="0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">GST Type</label>
+        <select class="form-input" id="gm_type">
+          <option value="intra">Intra-State (CGST+SGST)</option>
+          <option value="inter">Inter-State (IGST)</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Taxable</label>
+        <select class="form-input" id="gm_taxable">
+          <option value="yes">Taxable</option>
+          <option value="exempt">Exempt</option>
+          <option value="nil">Nil Rated</option>
+          <option value="nongst">Non-GST</option>
+        </select></div>
+    </div>
+    <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+      <label class="form-label" style="margin:0">Auto Compute on Bills</label>
+      <label class="toggle"><input type="checkbox" id="gm_auto" checked><span class="toggle-slider"></span></label>
+    </div>
+    <div class="form-group"><label class="form-label">Remark</label>
+      <input type="text" class="form-input" id="gm_remark" placeholder="Optional note"></div>
+    <input type="hidden" id="gm_editIdx" value="-1">
+    <div class="btn-group" style="justify-content:flex-end;margin-top:8px">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveGST()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script src="../js/global.js"></script>
 <script src="../js/masters-brain.js"></script>
-<script src="../js/rbac-engine.js"></script>
+<script src="../js/export-engine.js"></script>
+<script>
+const GST_KEY = 'jeevika_gst_master_society';
+function getGSTs() { return dbRead(GST_KEY) || []; }
+function saveGSTs(d) { dbWrite(GST_KEY, d); }
 
+function loadSocietyBanner() {
+  const soc = typeof SocietyMaster !== 'undefined' ? SocietyMaster.getActive() : null;
+  const infoEl = document.getElementById('societyGSTInfo');
+  const statusEl = document.getElementById('gstStatus');
+  if (soc) {
+    infoEl.innerHTML = `<b>${soc.name}</b> &nbsp;|&nbsp; GSTIN: <b>${soc.gstin||'Not Set'}</b> &nbsp;|&nbsp; PAN: <b>${soc.pan||'Not Set'}</b>`;
+    const gstOn = soc.gstEnabled;
+    statusEl.innerHTML = gstOn
+      ? `<span style="color:#059669">✅ GST ENABLED</span>`
+      : `<span style="color:#DC2626">🔴 GST DISABLED</span><br><small style="font-size:10px;color:#888">Enable in Society Master</small>`;
+  } else {
+    infoEl.textContent = 'No active society selected. Open Society Master to select one.';
+    statusEl.innerHTML = '';
+  }
+}
+
+function loadAccountsIntoSelect() {
+  const accounts = typeof AccountMaster !== 'undefined' ? AccountMaster.getAll() : dbRead('jeevika_accounts') || [];
+  const sel = document.getElementById('gm_account');
+  sel.innerHTML = '<option value="">-- Select Account Head --</option>' +
+    accounts
+      .filter(a => a.mainGroup === 'IN' || a.mainGroup === 'EX') // Only Income/Expense accounts relevant for GST
+      .map(a => `<option value="${a.code}" data-name="${a.name}">${a.code} — ${a.name}</option>`).join('');
+}
+
+function renderTable() {
+  const rows = getGSTs();
+  const tbody = document.getElementById('gstTbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--text-muted)">
+      No GST heads configured. Click "+ Add GST Head" to start.<br>
+      <small>GST Master is society-level — applies to all billing for the active society.</small>
+    </td></tr>`;
+    updateSummary([]);
+    return;
+  }
+  tbody.innerHTML = rows.map((r,i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${r.accountName||r.accountCode}</strong><br><small style="color:var(--text-muted)">${r.accountCode}</small></td>
+      <td>${r.hsn||'—'}</td>
+      <td style="text-align:center;font-weight:700">${r.rate||0}%</td>
+      <td style="text-align:center">${r.cgst||0}%</td>
+      <td style="text-align:center">${r.sgst||0}%</td>
+      <td style="text-align:center">${r.igst||0}%</td>
+      <td style="text-align:center"><span class="gst-badge gst-active">${r.gstType==='inter'?'IGST':'CGST+SGST'}</span></td>
+      <td style="text-align:center"><span class="gst-badge ${r.taxable==='exempt'||r.taxable==='nil'?'gst-exempt':'gst-yes'}">${r.taxable||'Taxable'}</span></td>
+      <td style="text-align:center"><span class="gst-badge ${r.active!==false?'gst-yes':'gst-no'}">${r.active!==false?'Active':'Inactive'}</span></td>
+      <td>
+        <button class="btn-secondary" style="font-size:10px;padding:3px 8px" onclick="editGST(${i})">Edit</button>
+        <button class="btn-secondary" style="font-size:10px;padding:3px 8px;color:var(--danger)" onclick="deleteGST(${i})">Del</button>
+        <button class="btn-secondary" style="font-size:10px;padding:3px 8px" onclick="toggleActive(${i})">${r.active!==false?'Deactivate':'Activate'}</button>
+      </td>
+    </tr>`).join('');
+  updateSummary(rows);
+}
+
+function updateSummary(rows) {
+  // Aggregate from member bills for summary (stub - will connect to actual billing)
+  const bills = dbRead('jeevika_member_bills_issued') || [];
+  let taxable=0, cgst=0, sgst=0;
+  bills.forEach(b => {
+    const principal = parseFloat(b.principal||0);
+    rows.forEach(r => {
+      if (r.active !== false && r.taxable === 'Taxable' || r.taxable === 'yes') {
+        const taxAmt = principal * (parseFloat(r.cgst||0)/100);
+        cgst += taxAmt;
+        sgst += principal * (parseFloat(r.sgst||0)/100);
+        taxable += principal;
+      }
+    });
+  });
+  const total = cgst + sgst;
+  const f = n => '₹' + n.toLocaleString('en-IN', {minimumFractionDigits:2});
+  document.getElementById('sumTaxable').textContent = f(taxable);
+  document.getElementById('sumCGST').textContent = f(cgst);
+  document.getElementById('sumSGST').textContent = f(sgst);
+  document.getElementById('sumTotal').textContent = f(total);
+}
+
+function splitGST() {
+  const rate = parseFloat(document.getElementById('gm_rate').value);
+  document.getElementById('gm_cgst').value = rate/2;
+  document.getElementById('gm_sgst').value = rate/2;
+  document.getElementById('gm_igst').value = rate;
+}
+
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = 'Add GST Head';
+  document.getElementById('gm_editIdx').value = '-1';
+  document.getElementById('gm_account').value = '';
+  document.getElementById('gm_hsn').value = '';
+  document.getElementById('gm_rate').value = '18';
+  document.getElementById('gm_cgst').value = '9';
+  document.getElementById('gm_sgst').value = '9';
+  document.getElementById('gm_igst').value = '18';
+  document.getElementById('gm_type').value = 'intra';
+  document.getElementById('gm_taxable').value = 'yes';
+  document.getElementById('gm_auto').checked = true;
+  document.getElementById('gm_remark').value = '';
+  loadAccountsIntoSelect();
+  document.getElementById('gstModal').classList.add('open');
+}
+
+function editGST(idx) {
+  const rows = getGSTs();
+  const r = rows[idx];
+  document.getElementById('modalTitle').textContent = 'Edit GST Head';
+  document.getElementById('gm_editIdx').value = idx;
+  loadAccountsIntoSelect();
+  setTimeout(() => { document.getElementById('gm_account').value = r.accountCode||''; }, 50);
+  document.getElementById('gm_hsn').value = r.hsn||'';
+  document.getElementById('gm_rate').value = r.rate||18;
+  document.getElementById('gm_cgst').value = r.cgst||9;
+  document.getElementById('gm_sgst').value = r.sgst||9;
+  document.getElementById('gm_igst').value = r.igst||18;
+  document.getElementById('gm_type').value = r.gstType||'intra';
+  document.getElementById('gm_taxable').value = r.taxable||'yes';
+  document.getElementById('gm_auto').checked = r.autoCompute!==false;
+  document.getElementById('gm_remark').value = r.remark||'';
+  document.getElementById('gstModal').classList.add('open');
+}
+
+function saveGST() {
+  const accSel = document.getElementById('gm_account');
+  const accCode = accSel.value;
+  if (!accCode) { showToast('Select an account head', 'warning'); return; }
+  const accName = accSel.options[accSel.selectedIndex]?.text?.split('—')[1]?.trim() || accCode;
+  const rows = getGSTs();
+  const idx = parseInt(document.getElementById('gm_editIdx').value);
+  const record = {
+    accountCode: accCode, accountName: accName,
+    hsn: document.getElementById('gm_hsn').value,
+    rate: parseFloat(document.getElementById('gm_rate').value),
+    cgst: parseFloat(document.getElementById('gm_cgst').value),
+    sgst: parseFloat(document.getElementById('gm_sgst').value),
+    igst: parseFloat(document.getElementById('gm_igst').value),
+    gstType: document.getElementById('gm_type').value,
+    taxable: document.getElementById('gm_taxable').value,
+    autoCompute: document.getElementById('gm_auto').checked,
+    remark: document.getElementById('gm_remark').value,
+    active: true
+  };
+  if (idx === -1) rows.push(record);
+  else rows[idx] = { ...rows[idx], ...record };
+  saveGSTs(rows);
+  closeModal();
+  renderTable();
+  showToast('GST head saved successfully', 'success');
+}
+
+function deleteGST(idx) {
+  if (!confirm('Delete this GST head?')) return;
+  const rows = getGSTs();
+  rows.splice(idx,1);
+  saveGSTs(rows);
+  renderTable();
+  showToast('GST head deleted','success');
+}
+
+function toggleActive(idx) {
+  const rows = getGSTs();
+  rows[idx].active = rows[idx].active === false ? true : false;
+  saveGSTs(rows);
+  renderTable();
+}
+
+function closeModal() { document.getElementById('gstModal').classList.remove('open'); }
+
+function exportGST() {
+  const rows = getGSTs();
+  const cols = [
+    {key:'accountName',label:'Account Head'},
+    {key:'hsn',label:'HSN/SAC'},
+    {key:'rate',label:'GST %',numeric:true},
+    {key:'cgst',label:'CGST %',numeric:true},
+    {key:'sgst',label:'SGST %',numeric:true},
+    {key:'igst',label:'IGST %',numeric:true},
+    {key:'taxable',label:'Taxable'},
+    {key:'remark',label:'Remark'},
+  ];
+  ExportManager.show(rows, cols, 'GST Master');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadSocietyBanner();
+  loadAccountsIntoSelect();
+  renderTable();
+});
+</script>
 </body></html>

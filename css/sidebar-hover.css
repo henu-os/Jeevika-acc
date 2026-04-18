@@ -1,0 +1,68 @@
+/* ════════════════════════════════════════════════
+   JEEVIKA ACCOUNTING — SIDEBAR HOVER SYSTEM
+   Enables flyout submenus on sidebar hover
+   ════════════════════════════════════════════════ */
+
+.nav-item {
+    position: relative;
+}
+
+/* Submenu Flyout Container */
+.sidebar-submenu {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 240px;
+    background: #2D1B69;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.3);
+    display: none;
+    padding: 10px 0;
+    z-index: 9999;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 0 8px 8px 0;
+}
+
+/* Custom Scrollbar for submenu */
+.sidebar-submenu::-webkit-scrollbar { width: 4px; }
+.sidebar-submenu::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+/* Show on Hover */
+.nav-item:hover .sidebar-submenu {
+    display: block;
+}
+
+/* Hover indication on parent */
+.nav-item:hover > a {
+    background: rgba(255,255,255,0.1);
+    color: #fff !important;
+}
+
+/* Submenu Items */
+.submenu-item {
+    display: block;
+    padding: 8px 20px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.submenu-item:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    padding-left: 25px;
+}
+
+.submenu-header {
+    padding: 10px 20px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #9B7FD4;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 5px;
+}

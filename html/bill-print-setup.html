@@ -5,68 +5,496 @@
 <title>Bill Print Setup — Jeevika Accounting</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/global.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-
+<style>
+  .bill-preview-wrap { background:#f8f8f8; padding:16px; border:1px solid #ddd; border-radius:8px; overflow:auto; }
+  .bill-frame { background:#fff; font-family:Arial,sans-serif; font-size:10px; border:1px solid #888; width:780px; margin:0 auto; }
+  .bill-table { width:100%; border-collapse:collapse; }
+  .bill-table td, .bill-table th { border:1px solid #888; padding:3px 5px; font-size:10px; }
+  .bill-table th { background:#e0e0e0; font-weight:bold; }
+  .hdr-bold { font-weight:bold; font-size:12px; }
+  .hdr-sub { font-size:9px; }
+  .lbl { font-weight:bold; }
+  .yellow-bg { background:#FFFF00; font-weight:bold; text-align:center; }
+  .blue-hdr { background:#BDD7EE; font-weight:bold; text-align:center; }
+  .section-title { font-weight:bold; text-align:center; font-size:11px; }
+  .receipt-section { border-top:3px double #888; margin-top:4px; }
+  .tab-btn { padding:8px 20px; border:none; border-bottom:3px solid transparent; background:none; cursor:pointer; font-weight:600; font-size:13px; font-family:inherit; color:#666; }
+  .tab-btn.active { color:var(--primary); border-bottom-color:var(--primary); }
+  .format-sel-btn { padding:7px 16px; border-radius:6px; border:2px solid var(--border); background:#fff; cursor:pointer; font-size:12px; font-weight:600; font-family:inherit; transition:.2s; }
+  .format-sel-btn.active { border-color:var(--primary); background:var(--accent-soft); color:var(--primary); }
+</style>
 </head>
 <body>
 <aside class="sidebar" id="sidebar">
-<div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
-<nav class="sidebar-nav">
-<div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
-<div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
-<div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
-<div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
-<div class="nav-item"><a href="communication.html"><span class="icon">💬</span> Communication</a></div>
-<div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
-<div class="nav-item"><a href="billing-utilities.html"><span class="icon">🧾</span> Billing Utilities</a></div>
-<div class="nav-item"><a href="statutory.html"><span class="icon">⚖️</span> Stat. Compliance</a></div>
-<div class="nav-item"><a href="forms-audit.html"><span class="icon">📝</span> Forms &amp; Audit</a></div>
-<div class="nav-item"><a href="access-security.html"><span class="icon">🔐</span> Access &amp; Security</a></div>
-<div class="sidebar-section">───────────</div>
-<div class="sidebar-bottom">
-<div class="nav-item"><a href="notices.html"><span class="icon">📌</span> Notice Board</a></div>
-<div class="nav-item"><a href="help.html"><span class="icon">❓</span> Help &amp; Documentation</a></div>
-</div></nav></aside>
+  <div class="sidebar-logo"><div class="logo-icon">J</div><div class="logo-text"><h2>jeevika</h2><span>accounting</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-item"><a href="dashboard.html"><span class="icon">📊</span> Dashboard</a></div>
+    <div class="nav-item"><a href="masters.html"><span class="icon">📋</span> Masters</a></div>
+    <div class="nav-item"><a href="transactions.html"><span class="icon">💰</span> Transactions</a></div>
+    <div class="nav-item"><a href="reports.html"><span class="icon">📈</span> Reports</a></div>
+    <div class="nav-item"><a href="utilities.html"><span class="icon">🔧</span> Utilities</a></div>
+  </nav>
+</aside>
 <div class="main-wrapper">
-<header class="topbar"><div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><div class="page-title">Bill Print Setup</div><div class="breadcrumb">Home / Masters / Bill Print Setup</div></div></div><div class="topbar-center"><div class="search-wrap"><input type="text" class="search-bar" placeholder="Search..."></div></div><div class="topbar-right"><span class="topbar-date" id="currentDate"></span><button class="topbar-icon">🔔<span class="notif-badge">3</span></button><button class="topbar-icon">⊞</button><button class="topbar-icon">🛡️</button><button class="topbar-icon">✉️</button><button class="topbar-icon">⚙️</button><div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div><span style="font-size:10px;color:var(--text-muted)">▼</span></div></div></header>
+<header class="topbar">
+  <div class="topbar-left"><button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+  <div><div class="page-title">Bill Print Setup</div><div class="breadcrumb">Home / Masters / Bill Print Setup</div></div></div>
+  <div class="topbar-right"><span class="topbar-date" id="currentDate"></span>
+  <div class="topbar-profile"><div class="avatar">A</div><div class="profile-info"><div class="name">Admin</div><div class="role">Super Admin</div></div></div></div>
+</header>
 <main class="page-content">
-<div class="page-header"><div><h1>Bill Print Setup</h1><p>Bill template and format configuration</p></div></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-<div class="card"><h3 style="font-weight:700;margin-bottom:20px">Configuration</h3>
-<div class="form-group"><label class="form-label">Society Logo</label><div style="border:2px dashed var(--border-dark);border-radius:var(--radius-md);padding:32px;text-align:center;cursor:pointer;color:var(--text-muted)">📁 Drag & drop logo or click to upload<br><small>PNG, JPG — Max 2MB</small></div></div>
-<div class="form-group"><label class="form-label">Header Line 1</label><input type="text" class="form-input" value="Shree Sai Usha Complex Co-op Housing Society Ltd."></div>
-<div class="form-group"><label class="form-label">Header Line 2</label><input type="text" class="form-input" value="Regd. No. BOM/HSG/4567 of 2010"></div>
-<div class="form-group"><label class="form-label">Header Line 3</label><input type="text" class="form-input" value="Andheri West, Mumbai - 400058"></div>
-<div class="form-group"><label class="form-label">Footer Notes</label><textarea class="form-input" rows="3">Interest @ 21% p.a. will be charged on overdue amount. Cheques to be drawn in favour of society.</textarea></div>
-<div class="form-row"><div class="form-group"><label class="form-label">Paper Size</label><div style="display:flex;gap:12px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="paper" checked> A4</label><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="paper"> A5</label></div></div>
-<div class="form-group"><label class="form-label">Bill Prefix</label><input type="text" class="form-input" value="BILL/2024/"></div></div>
-<div class="form-group"><label class="form-label">Show GST Breakup</label><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
-<div class="form-group"><label class="form-label">Show Interest Separately</label><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
-<button class="btn-primary" onclick="showToast('Print setup saved')">Save Configuration</button></div>
-<div class="card"><h3 style="font-weight:700;margin-bottom:20px">📄 Live Bill Preview</h3>
-<div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:24px;background:#FAFAFA;font-size:12px">
-<div style="text-align:center;margin-bottom:16px"><strong style="font-size:14px">Shree Sai Usha Complex Co-op Housing Society Ltd.</strong><br>Regd. No. BOM/HSG/4567 of 2010<br>Andheri West, Mumbai - 400058</div>
-<div style="display:flex;justify-content:space-between;margin-bottom:12px"><span><strong>Bill No:</strong> BILL/2024/089</span><span><strong>Date:</strong> 01/04/2024</span></div>
-<div style="margin-bottom:12px"><strong>Member:</strong> Aman Salvi | <strong>Flat:</strong> A-101 | <strong>Wing:</strong> A</div>
-<table style="width:100%;border-collapse:collapse;margin-bottom:12px"><tr style="background:#f0f0f0"><th style="border:1px solid #ddd;padding:6px;text-align:left">Particulars</th><th style="border:1px solid #ddd;padding:6px;text-align:right">Amount</th></tr>
-<tr><td style="border:1px solid #ddd;padding:6px">Maintenance Charges</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹3,500</td></tr>
-<tr><td style="border:1px solid #ddd;padding:6px">Water Charges</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹500</td></tr>
-<tr><td style="border:1px solid #ddd;padding:6px">Sinking Fund</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹700</td></tr>
-<tr><td style="border:1px solid #ddd;padding:6px">Parking Charges</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹1,000</td></tr>
-<tr><td style="border:1px solid #ddd;padding:6px">CGST (9%)</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹405</td></tr>
-<tr><td style="border:1px solid #ddd;padding:6px">SGST (9%)</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹405</td></tr>
-<tr style="background:#f0f0f0;font-weight:700"><td style="border:1px solid #ddd;padding:6px">Total</td><td style="border:1px solid #ddd;padding:6px;text-align:right">₹6,510</td></tr></table>
-<p style="font-size:10px;color:#666">Interest @ 21% p.a. will be charged on overdue amount.</p>
-</div>
-<button class="btn-secondary" style="margin-top:12px" onclick="showToast('Opening print dialog...','info')">🖨️ Print Sample</button></div></div>
+  <div class="page-header">
+    <div><h1>Bill Print Setup</h1><p>Configure bill template, format, and print settings</p></div>
+    <div class="btn-group">
+      <button class="btn-secondary" onclick="printPreview()">🖨️ Print Sample</button>
+      <button class="btn-primary" onclick="saveConfig()">💾 Save Configuration</button>
+    </div>
+  </div>
+
+  <!-- Format Selection -->
+  <div class="card" style="margin-bottom:20px">
+    <h3 style="font-weight:700;margin-bottom:14px">📄 Select Bill Format</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="format-sel-btn active" id="fmt1btn" onclick="selectFormat(1)">Format 1 — Bill with QR Right</button>
+      <button class="format-sel-btn" id="fmt2btn" onclick="selectFormat(2)">Format 2 — Bill + Receipt Below</button>
+      <button class="format-sel-btn" id="fmt3btn" onclick="selectFormat(3)">Format 3 — Member Register Form</button>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted)">Select the format that matches your society's requirement. Format 1 & 2 are for billing/invoicing. Format 3 is the member admission register.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:320px 1fr;gap:20px">
+    <!-- Left: Config Panel -->
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="font-weight:700;margin-bottom:16px">⚙️ Header Configuration</h3>
+        <div class="form-group"><label class="form-label">Society Logo</label>
+          <div style="border:2px dashed var(--border-dark);border-radius:8px;padding:20px;text-align:center;cursor:pointer;color:var(--text-muted);font-size:12px" onclick="document.getElementById('logoUpload').click()">
+            📁 Upload Logo (PNG/JPG)<br><small>Max 2MB</small>
+          </div>
+          <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
+        </div>
+        <div class="form-group"><label class="form-label">Society Name (Header Line 1)</label>
+          <input type="text" class="form-input" id="hdr_line1" value="Mulund SAI DARSHAN CO-OP. HOUSING SOCIETY LTD."></div>
+        <div class="form-group"><label class="form-label">Registration / Line 2</label>
+          <input type="text" class="form-input" id="hdr_line2" value="MUM (MUMBAI MANDAL)/HSG/(T.C.)/9545/YEAR-1999-2000, DATE-18.05.1999"></div>
+        <div class="form-group"><label class="form-label">Address Line 3</label>
+          <input type="text" class="form-input" id="hdr_line3" value="PLOT NO.19, R.D.P.1, MHADA COLONY, MULUND (E), MUMBAI-400 081."></div>
+        <div class="form-group"><label class="form-label">Contact / PAN / Line 4</label>
+          <input type="text" class="form-input" id="hdr_line4" value="mulundamt@gmail.com / 9920497822 / Pan No. or GST no. AAAAT1536D"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="font-weight:700;margin-bottom:16px">🧾 Bill Settings</h3>
+        <div class="form-group"><label class="form-label">Bill Prefix</label>
+          <input type="text" class="form-input" id="bill_prefix" value="BILL/2025/"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Paper Size</label>
+            <select class="form-input" id="paper_size">
+              <option value="A4">A4</option><option value="A5">A5</option><option value="Letter">Letter</option>
+            </select></div>
+          <div class="form-group"><label class="form-label">Orientation</label>
+            <select class="form-input" id="orientation">
+              <option>Portrait</option><option>Landscape</option>
+            </select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Top Margin (mm)</label>
+            <input type="number" class="form-input" id="margin_top" value="10"></div>
+          <div class="form-group"><label class="form-label">Bottom Margin (mm)</label>
+            <input type="number" class="form-input" id="margin_bottom" value="10"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Left Margin (mm)</label>
+            <input type="number" class="form-input" id="margin_left" value="10"></div>
+          <div class="form-group"><label class="form-label">Right Margin (mm)</label>
+            <input type="number" class="form-input" id="margin_right" value="10"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Font Size (pt)</label>
+            <input type="number" class="form-input" id="font_size" value="10" min="8" max="14"></div>
+          <div class="form-group"><label class="form-label">Line Spacing</label>
+            <select class="form-input" id="line_spacing">
+              <option value="1">Single</option><option value="1.2" selected>1.2</option><option value="1.5">1.5</option>
+            </select></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="font-weight:700;margin-bottom:16px">💳 Bank Details (for Bill)</h3>
+        <div class="form-group"><label class="form-label">Bank Name & Branch</label>
+          <input type="text" class="form-input" id="bank_name" value="HDFC BANK - KANDIVALI (W)"></div>
+        <div class="form-group"><label class="form-label">Account Number</label>
+          <input type="text" class="form-input" id="bank_acno" value="00153648915223"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">IFSC Code</label>
+            <input type="text" class="form-input" id="bank_ifsc" value="HDFC00000F"></div>
+          <div class="form-group"><label class="form-label">Account Type</label>
+            <input type="text" class="form-input" id="bank_type" value="Saving Bank A/C"></div>
+        </div>
+        <div class="form-group"><label class="form-label">UPI ID</label>
+          <input type="text" class="form-input" id="bank_upi" value=""></div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-weight:700;margin-bottom:16px">🔧 Display Options</h3>
+        <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+          <label class="form-label" style="margin:0">Show GST Breakup</label>
+          <label class="toggle"><input type="checkbox" id="show_gst" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+          <label class="form-label" style="margin:0">Show Interest Separately</label>
+          <label class="toggle"><input type="checkbox" id="show_interest" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+          <label class="form-label" style="margin:0">Show QR Code</label>
+          <label class="toggle"><input type="checkbox" id="show_qr" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+          <label class="form-label" style="margin:0">Show Arrears Breakup</label>
+          <label class="toggle"><input type="checkbox" id="show_arrears" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+          <label class="form-label" style="margin:0">Show Bank Details in Bill</label>
+          <label class="toggle"><input type="checkbox" id="show_bank" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group" style="display:flex;justify-content:space-between;align-items:center">
+          <label class="form-label" style="margin:0">Print Receipt Below Bill</label>
+          <label class="toggle"><input type="checkbox" id="show_receipt" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-group"><label class="form-label">Footer / IMP Note</label>
+          <textarea class="form-input" id="footer_note" rows="2">Subject to Realisation of Cheque (S)o or Online Payment (IMPS/UPI/GPAY/Etc)</textarea></div>
+        <div class="form-group"><label class="form-label">Signatory Text</label>
+          <input type="text" class="form-input" id="signatory" value="Chairman/Jt.Secretary/Treasurer"></div>
+      </div>
+    </div>
+
+    <!-- Right: Live Preview -->
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <h3 style="font-weight:700">👁️ Live Preview</h3>
+          <div class="btn-group">
+            <button class="btn-secondary" onclick="printPreview()" style="font-size:12px">🖨️ Print</button>
+            <button class="btn-secondary" onclick="exportPDF()" style="font-size:12px">📄 PDF</button>
+          </div>
+        </div>
+        <div class="bill-preview-wrap" id="billPreviewWrap">
+          <!-- Preview rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script src="../js/global.js"></script>
 <script src="../js/masters-brain.js"></script>
-<script src="../js/rbac-engine.js"></script>
+<script>
+let currentFormat = 1;
 
+function selectFormat(n) {
+  currentFormat = n;
+  document.querySelectorAll('.format-sel-btn').forEach((b,i) => b.classList.toggle('active', i+1===n));
+  renderPreview();
+}
+
+function getConfig() {
+  return {
+    line1: document.getElementById('hdr_line1').value,
+    line2: document.getElementById('hdr_line2').value,
+    line3: document.getElementById('hdr_line3').value,
+    line4: document.getElementById('hdr_line4').value,
+    prefix: document.getElementById('bill_prefix').value,
+    bankName: document.getElementById('bank_name').value,
+    bankAcno: document.getElementById('bank_acno').value,
+    bankIfsc: document.getElementById('bank_ifsc').value,
+    bankType: document.getElementById('bank_type').value,
+    bankUpi: document.getElementById('bank_upi').value,
+    showGst: document.getElementById('show_gst').checked,
+    showInterest: document.getElementById('show_interest').checked,
+    showQr: document.getElementById('show_qr').checked,
+    showArrears: document.getElementById('show_arrears').checked,
+    showBank: document.getElementById('show_bank').checked,
+    showReceipt: document.getElementById('show_receipt').checked,
+    footer: document.getElementById('footer_note').value,
+    signatory: document.getElementById('signatory').value
+  };
+}
+
+function renderFormat1(cfg) {
+  return `
+  <div class="bill-frame">
+    <table class="bill-table" style="margin-bottom:0">
+      <tr>
+        <td style="width:100px;text-align:center;vertical-align:middle;font-size:9px" rowspan="2">SOCIETY LOGO</td>
+        <td style="vertical-align:middle;padding:4px 8px">
+          <div class="hdr-bold">${cfg.line1}</div>
+          <div class="hdr-sub">${cfg.line2}</div>
+          <div class="hdr-sub">${cfg.line3}</div>
+          <div class="hdr-sub">${cfg.line4}</div>
+        </td>
+        <td style="width:100px;text-align:center;vertical-align:middle;font-size:9px" rowspan="2">${cfg.showQr?'QR CODE':''}</td>
+      </tr>
+    </table>
+    <table class="bill-table">
+      <tr>
+        <td style="width:370px;vertical-align:top">
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td style="font-size:9px">To,</td></tr>
+            <tr><td>Mr. Deepak Banu Kadam</td></tr>
+            <tr><td>Mrs. Savita Deepak Kadam</td></tr>
+            <tr><td>Mr. Om Deepak Kadam</td></tr>
+            <tr><td>Miss. Jeevika Deepak Kadam</td></tr>
+            <tr><td style="padding-top:4px"></td></tr>
+            <tr><td>deepakk71180@gmail.com &nbsp;&nbsp; 919920497822</td></tr>
+            <tr><td><span class="lbl">Flat No.</span></td></tr>
+            <tr><td><span class="lbl">Wing No.</span></td></tr>
+            <tr><td><span class="lbl">Floor No.</span></td></tr>
+            <tr><td><span class="lbl">Building No.</span></td></tr>
+            <tr><td>
+              <table style="width:100%;border-collapse:collapse;font-size:9px">
+                <tr><td>Area</td><td>Carpet</td><td>Buildup</td><td></td><td>Sq. Ft./ Sq.Mtr.</td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </td>
+        <td style="vertical-align:top">
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td colspan="2" style="text-align:center;font-weight:bold;border:1px solid #888;padding:2px">Bill / Invoice / Tax Invoice</td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Bill No.</td><td style="border:1px solid #888;padding:2px"></td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Bill Date</td><td style="border:1px solid #888;padding:2px"></td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Bill Due Date</td><td style="border:1px solid #888;padding:2px"></td></tr>
+            <tr><td colspan="2" style="text-align:center;font-weight:bold;border:1px solid #888;padding:2px">Bill Period</td></tr>
+            <tr><td colspan="2" style="text-align:center;border:1px solid #888;padding:2px">01-September-2023 to 30-September-2023</td></tr>
+            <tr><td colspan="2" style="text-align:center;vertical-align:middle;padding:20px;border:1px solid #888">${cfg.showQr?'QR CODE':''}</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <table class="bill-table">
+      <tr><th style="width:40px">Sr. No.</th><th>MAINTENANCE ACCOUNT HEAD</th><th style="width:80px">Amount (Rs.)</th>
+        <td colspan="4" class="yellow-bg">"Other Info"</td></tr>
+      <tr><td>1</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td colspan="4" class="blue-hdr">Bank Lien Charge info</td></tr>
+      <tr><td>2</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td colspan="4" style="text-align:center">Bank of Maharatshtra - Kurla Branch</td></tr>
+      <tr><td>3</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td style="font-weight:bold">Loan Amount</td><td>50000000</td><td style="font-weight:bold">Loan Tenure</td><td>120 Month</td></tr>
+      <tr><td>4</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td colspan="4" class="blue-hdr">Parking Info</td></tr>
+      <tr><td>5</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td>2-W Parking</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td></tr>
+      <tr><td>6</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td>2-W Parking</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td></tr>
+      <tr><td>7</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td>4-W Parking</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td></tr>
+      <tr><td>8</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td>4-W Parking</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td><td>MH-03-AC-2109</td></tr>
+      <tr><td>9</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td colspan="4" class="blue-hdr">Non Occupancy Info</td></tr>
+      <tr><td>10</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td>Period =</td><td style="font-weight:bold">From</td><td style="font-weight:bold">to</td><td style="font-weight:bold">Tenure</td></tr>
+      <tr><td>11</td><td></td><td style="text-align:right">5000 &nbsp; 00</td>
+        <td></td><td>01.04.2021</td><td>28.02.2022</td><td>11 Months</td></tr>
+      ${[12,13,14,15,16,17,18,19,20,21].map(n=>`<tr><td>${n}</td><td></td><td style="text-align:right">5000 &nbsp; 00</td><td colspan="4"></td></tr>`).join('')}
+    </table>
+    ${cfg.showArrears?`
+    <table class="bill-table">
+      <tr><td colspan="3" style="font-weight:bold">Arrears / Outstanding Breakup</td><td>Total =</td><td style="text-align:right">105000 &nbsp; 00</td><td colspan="4"></td></tr>
+      <tr><td colspan="2" style="font-weight:bold">Arrears Principal</td><td colspan="2">Arrears</td><td>1050 &nbsp; 00</td><td colspan="4"></td></tr>
+      <tr><td colspan="2" style="font-weight:bold">Arrears Interest</td><td>Interest @ 21%</td><td></td><td>18 &nbsp; 00</td><td colspan="4"></td></tr>
+      <tr><td colspan="2" style="font-weight:bold">Arrears Total</td><td>Total Due =</td><td></td><td>106068 &nbsp; 00</td><td colspan="4"></td></tr>
+    </table>` : ''}
+  </div>`;
+}
+
+function renderFormat2(cfg) {
+  return `
+  <div class="bill-frame">
+    <table class="bill-table">
+      <tr><td colspan="3" style="text-align:center;padding:4px">
+        <div class="hdr-bold">${cfg.line1}</div>
+        <div class="hdr-sub">${cfg.line2}</div>
+        <div class="hdr-sub">${cfg.line3}</div>
+        <div class="hdr-sub">${cfg.line4}</div>
+      </td></tr>
+    </table>
+    <table class="bill-table">
+      <tr>
+        <td style="width:370px;vertical-align:top;padding:4px">
+          <div style="font-size:9px">To,</div>
+          <div>Mr. Deepak Banu Kadam</div>
+          <div>Mrs. Savita Deepak Kadam</div>
+          <div>Mr. Om Deepak Kadam</div>
+          <div>Miss. Jeevika Deepak Kadam</div>
+          <div style="margin-top:4px">deepakk71180@gmail.com &nbsp; 919920497822</div>
+          <table style="width:100%;font-size:9px;margin-top:2px">
+            <tr><td>Flat No.</td><td></td></tr>
+            <tr><td>Wing No.</td><td></td></tr>
+            <tr><td>Floor No.</td><td></td></tr>
+            <tr><td>Building No.</td><td></td></tr>
+            <tr><td colspan="2">Area &nbsp; Carpet &nbsp; Buildup &nbsp; Sq. Ft./Sq.Mtr.</td></tr>
+          </table>
+        </td>
+        <td style="vertical-align:top">
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td colspan="2" style="text-align:center;font-weight:bold;border:1px solid #888;padding:2px">Bill / Invoice / Tax Invoice</td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Bill No.</td><td style="border:1px solid #888;padding:2px"></td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Bill Date</td><td style="border:1px solid #888;padding:2px"></td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Bill Due Date</td><td style="border:1px solid #888;padding:2px"></td></tr>
+            <tr><td colspan="2" class="yellow-bg" style="border:1px solid #888;padding:2px">"Other Info"</td></tr>
+            <tr><td colspan="2" class="blue-hdr" style="border:1px solid #888;padding:2px">Bank Lien Charge info</td></tr>
+            <tr><td colspan="2" style="text-align:center;border:1px solid #888;padding:2px">Bank of Maharatshtra - Kurla Branch</td></tr>
+            <tr><td style="font-weight:bold;border:1px solid #888;padding:2px">Loan Amount</td><td style="border:1px solid #888;padding:2px">50000000 &nbsp; Tenure: 120 Month</td></tr>
+            <tr><td colspan="2" class="blue-hdr" style="border:1px solid #888;padding:2px">Parking Info</td></tr>
+            <tr><td style="border:1px solid #888;padding:2px;font-weight:bold">2-W Parking</td><td style="border:1px solid #888;padding:2px">MH-03-AC-2109 &nbsp; MH-03-AC-2109 &nbsp; MH-03-AC-2109</td></tr>
+            <tr><td style="border:1px solid #888;padding:2px;font-weight:bold">2-W Parking</td><td style="border:1px solid #888;padding:2px">MH-03-AC-2109 &nbsp; MH-03-AC-2109 &nbsp; MH-03-AC-2109</td></tr>
+            <tr><td style="border:1px solid #888;padding:2px;font-weight:bold">4-W Parking</td><td style="border:1px solid #888;padding:2px">MH-03-AC-2109 &nbsp; MH-03-AC-2109 &nbsp; MH-03-AC-2109</td></tr>
+            <tr><td colspan="2" class="blue-hdr" style="border:1px solid #888;padding:2px">Non Occupancy Info</td></tr>
+            <tr><td style="border:1px solid #888;padding:2px">Period = </td><td style="border:1px solid #888;padding:2px">From: 01.04.2021 &nbsp; to: 28.02.2022 &nbsp; 11 Months</td></tr>
+            <tr><td colspan="2" style="border:1px solid #888;padding:2px;background:#FFF3E0">Notes</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <table class="bill-table">
+      <tr><th style="width:35px">Sr.</th><th>MAINTENANCE ACCOUNT HEAD</th><th style="width:70px">Amount (Rs.)</th><th colspan="4"></th></tr>
+      ${[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21].map(n=>`<tr><td>${n}</td><td></td><td style="text-align:right">5000 &nbsp; 00</td><td colspan="4"></td></tr>`).join('')}
+    </table>
+    ${cfg.showArrears?`
+    <table class="bill-table">
+      <tr><td colspan="2" style="font-weight:bold">Arrears / Outstanding Breakup</td><td>Total = </td><td style="text-align:right">105000 &nbsp; 00</td>
+        ${cfg.showBank?`<td colspan="4" style="font-size:9px">Bank Detail -<br>${cfg.bankName}<br>A/c No. ${cfg.bankAcno}<br>IFSC Code - ${cfg.bankIfsc}<br>Account Type - ${cfg.bankType}<br>UPI ID - ${cfg.bankUpi}</td>`:'<td colspan="4"></td>'}</tr>
+      <tr><td colspan="2" style="font-weight:bold">Arrears Principal</td><td>Arrears</td><td>1050 &nbsp; 00</td>
+        ${cfg.showQr?'<td colspan="4" style="text-align:center;font-size:9px">QR CODE</td>':'<td colspan="4"></td>'}</tr>
+      <tr><td colspan="2" style="font-weight:bold">Arrears Interest</td><td>Interest</td><td>18 &nbsp; 00</td><td colspan="4"></td></tr>
+      <tr><td colspan="2" style="font-weight:bold">Arrears Total</td><td>Total Due =</td><td>106068 &nbsp; 00</td><td colspan="4"></td></tr>
+      <tr><td colspan="4">Rupees - Ten Lakh Seventy Thousand Six Hundred Seventy Nine Only</td><td colspan="4"></td></tr>
+    </table>` : ''}
+    ${cfg.showReceipt?`
+    <div class="receipt-section">
+      <table class="bill-table"><tr><td colspan="8" style="text-align:center;font-weight:bold;font-size:12px;padding:6px">"RECEIPT"</td></tr></table>
+      <table class="bill-table">
+        <tr><td colspan="8" style="text-align:center;padding:4px">
+          <div style="font-weight:bold">${cfg.line1}</div>
+          <div style="font-size:9px">${cfg.line2}</div>
+          <div style="font-size:9px">${cfg.line3}</div>
+        </td></tr>
+      </table>
+      <table class="bill-table">
+        <tr><td colspan="8" style="font-size:9px;padding:3px">Received with Thanks for Flat No. --------- Wing --------- Floor No. ------------- Building No. ---------------<br>
+        Mr. Deepak Bandu Kadam, Mrs. Savita Deepak Kadam, Mr. Om Deepak Kadam, Miss Jeevika Deepak Kadam<br>
+        AFSFGSDGDHFDJHFJKFGYKFGK</td></tr>
+      </table>
+      <table class="bill-table">
+        <tr><th>Receipt No.</th><th>Receipt Date</th><th>Transaction</th><th>Cheque No.</th><th>Cheque Dt.</th><th>Bank Name & Branch</th><th>Amount</th><th>Remark</th></tr>
+        <tr><td>12</td><td>12.03.2023</td><td>Online</td><td>71118123654</td><td>12.03.2023</td><td></td><td>5000</td><td>Against Bill No. 55 - Dated 01.03.2023</td></tr>
+        <tr><td>16</td><td>16.03.2023</td><td>Cash</td><td></td><td></td><td></td><td>2000</td><td>Against Bill No. 55 - Dated 01.03.2023</td></tr>
+        <tr><td>25</td><td>21.03.2023</td><td>Cheque</td><td>151315</td><td>10.03.202</td><td>KOTAK MAHINDRA BA</td><td>2333</td><td>Against Bill No. 55 - Dated 01.03.2023</td></tr>
+        <tr><td>25</td><td>22.03.2023</td><td>W/FF</td><td></td><td></td><td></td><td>1500</td><td>Member woff amount</td></tr>
+      </table>
+      <table class="bill-table">
+        <tr>
+          <td style="font-size:9px;padding:4px"><b>IMP Note :-</b><br>${cfg.footer}</td>
+          <td style="text-align:right;font-size:9px;padding:4px">For ${cfg.line1}<br><br><br>${cfg.signatory}</td>
+        </tr>
+      </table>
+    </div>`:''} 
+  </div>`;
+}
+
+function renderFormat3(cfg) {
+  const rows = [
+    ['1','Sr. No.','','','',''],
+    ['2','Date of Admission','','','',''],
+    ['3','Date of Payment of Entrance Fees','','','',''],
+    ['4','Members Name','Prefix','Last Name','First Name','Middle Name'],
+    ['','Members Name','Prefix','Last Name','First Name','Middle Name'],
+    ['','Members Name','Prefix','Last Name','First Name','Middle Name'],
+    ['','Members Name','Prefix','Last Name','First Name','Middle Name'],
+    ['5','Class of Member','Regular Member','Associate Member','Nominated Member','Nominal Member'],
+    ['6','Flat No.','Room No.','Shop No.','Office No.','Gala No. / Unit No.'],
+    ['7','Address (Permanant)','','','',''],
+    ['8','Address (Residential / Care off)','','','',''],
+    ['9','Occupation','Business','Services','Retired','House Wife / Self Employed'],
+    ['10','Age on the Date of Admission','','','',''],
+    ['11','Date of Nomination','','','',''],
+    ['12','Full Name and Address of the person nominated','','','',''],
+    ['','Nomination Details (%)','','','',''],
+    ['','1)','','','',''],['','2)','','','',''],['','3)','','','',''],['','4)','','','',''],['','5)','','','',''],
+    ['13','Date of Cessation of Membership','','','',''],
+    ['14','Reason for Cessation','','','',''],
+    ['15','Remark 1','','','',''],
+    ['16','Remark 2','','','',''],
+    ['17','Each Shares Value','','50','',''],
+    ['18','Application of Shares (5 or 10)','','','',''],
+    ['19','Allotment of Shares (5 of 10)','','','',''],
+    ['20','Amount Received (250 or 500)','','','',''],
+    ['21','Total Amount (250 or 500)','','','',''],
+    ['22','No. Shares held','001 to 005','001 to 010','',''],
+    ['','A) Line Charge details (Bank Name, Loan Amount & Letter Dated)','','','',''],
+    ['','B) Line realized details (Bank Name & Letter Dated)','','','',''],
+    ['','A) Line Charge details (Bank Name, Loan Amount & Letter Dated)','','','',''],
+    ['','B) Line realized details (Bank Name & Letter Dated)','','','',''],
+    ['','A) Line Charge details (Bank Name, Loan Amount & Letter Dated)','','','',''],
+    ['','B) Line realized details (Bank Name & Letter Dated)','','','',''],
+    ['','A) Line Charge details (Bank Name, Loan Amount & Letter Dated)','','','',''],
+    ['','B) Line realized details (Bank Name & Letter Dated)','','','',''],
+  ];
+  return `<div class="bill-frame">
+    <table class="bill-table">
+      <tr style="background:#cce5ff"><th>Sr.</th><th style="min-width:280px">Field</th><th>Col 1</th><th>Col 2</th><th>Col 3</th><th>Col 4</th></tr>
+      ${rows.map(r=>`<tr><td style="font-weight:${r[0]?'bold':'normal'}">${r[0]}</td><td style="font-weight:${r[0]?'bold':'normal'}">${r[1]}</td><td style="color:#4472C4">${r[2]}</td><td style="color:#4472C4">${r[3]}</td><td style="color:#4472C4">${r[4]}</td><td style="color:#4472C4">${r[5]}</td></tr>`).join('')}
+    </table>
+  </div>`;
+}
+
+function renderPreview() {
+  const cfg = getConfig();
+  let html = '';
+  if (currentFormat === 1) html = renderFormat1(cfg);
+  else if (currentFormat === 2) html = renderFormat2(cfg);
+  else html = renderFormat3(cfg);
+  document.getElementById('billPreviewWrap').innerHTML = html;
+}
+
+function saveConfig() {
+  const cfg = getConfig();
+  cfg.format = currentFormat;
+  localStorage.setItem('jeevika_bill_print_config', JSON.stringify(cfg));
+  showToast('Bill print configuration saved successfully!', 'success');
+}
+
+function handleLogoUpload(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      localStorage.setItem('jeevika_society_logo', e.target.result);
+      showToast('Logo uploaded','success');
+      renderPreview();
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function printPreview() {
+  const content = document.getElementById('billPreviewWrap').innerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Bill Print — Jeevika</title>
+    <style>body{font-family:Arial,sans-serif;font-size:10px;margin:${document.getElementById('margin_top').value}mm ${document.getElementById('margin_right').value}mm ${document.getElementById('margin_bottom').value}mm ${document.getElementById('margin_left').value}mm}
+    table{width:100%;border-collapse:collapse}td,th{border:1px solid #888;padding:3px 5px;font-size:${document.getElementById('font_size').value}pt}th{background:#e0e0e0}
+    .yellow-bg{background:#FFFF00;font-weight:bold;text-align:center}.blue-hdr{background:#BDD7EE;font-weight:bold;text-align:center}
+    @media print{@page{size:${document.getElementById('paper_size').value} ${document.getElementById('orientation').value};margin:${document.getElementById('margin_top').value}mm ${document.getElementById('margin_right').value}mm ${document.getElementById('margin_bottom').value}mm ${document.getElementById('margin_left').value}mm}}</style>
+    </head><body>${content}</body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function exportPDF() { showToast('Opening PDF export...','info'); printPreview(); }
+
+// Wire live preview on any config change
+document.querySelectorAll('.form-input, .toggle input').forEach(el => el.addEventListener('change', renderPreview));
+document.querySelectorAll('.form-input').forEach(el => el.addEventListener('input', renderPreview));
+document.addEventListener('DOMContentLoaded', () => { renderPreview(); });
+</script>
 </body></html>

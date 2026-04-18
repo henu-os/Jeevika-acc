@@ -139,6 +139,14 @@ const SocietyMasterFull = {
         <!-- SOCIETY DETAILS -->
         ${this._sectionHeader('🏢', 'Society Details')}
         <div class="smf-grid2">
+          <div class="smf-field">
+            <label class="smf-label">Society Code *</label>
+            <input class="smf-input" name="code" value="${d.code||''}" ${d.code?'readonly':''} style="font-weight:700;color:#2D1B69">
+          </div>
+          <div class="smf-field">
+            <label class="smf-label">Society Name *</label>
+            <input class="smf-input" name="name" value="${d.name||''}" style="font-weight:700">
+          </div>
           ${this._field('Regn. No.', 'registrationNo', d.registrationNo, 'full')}
           ${this._field('Address', 'address', d.address, 'full', 'textarea')}
           ${this._field('Email Id', 'email', d.email)}
@@ -155,6 +163,19 @@ const SocietyMasterFull = {
             </select>
           </div>
           ${this._field('Message', 'message', d.message || '', 'full')}
+        </div>
+
+        <!-- CONDITIONAL YES/NO FLAGS -->
+        ${this._sectionHeader('🔧', 'System Feature Flags (YES / NO)', '#059669')}
+        <div class="smf-grid2" style="margin-bottom:12px">
+          ${this._yesno('GST Applicable', 'gstEnabled', d.gstEnabled, '⚠ Affects billing system-wide')}
+          ${this._yesno('Has TAN Number', 'hasTAN', d.hasTAN, 'Unlocks TDS/TCS fields')}
+          ${this._yesno('Share Capital', 'hasShareCapital', d.hasShareCapital !== false, 'Show Share Capital section')}
+          ${this._yesno('NOC Applicable', 'hasNOC', d.hasNOC, 'Non Occupancy Charges billing')}
+          ${this._yesno('Parking Charges', 'hasParking', d.hasParking, 'Show parking billing fields')}
+          ${this._yesno('Sinking Fund', 'hasSinkingFund', d.hasSinkingFund !== false, 'Mandatory fund per MCS rules')}
+          ${this._yesno('Show Bank Details on Bill', 'showBankOnBill', d.showBankOnBill !== false, '')}
+          ${this._yesno('Print QR Code on Bill', 'printQR', d.printQR !== false, '')}
         </div>
 
         <!-- INTEREST SETTING DETAILS -->
@@ -418,6 +439,19 @@ const SocietyMasterFull = {
     return String(str||'').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   },
 
+  // ═══ HELPER: YES / NO Toggle field ═══
+  _yesno(label, name, value, hint) {
+    const isYes = value === true || value === 'yes' || value === 1;
+    return `<div class="smf-field">
+      <label class="smf-label">${label}${hint?`<span style="font-size:9px;color:#888;display:block;font-weight:400">${hint}</span>`:''}
+      </label>
+      <select class="smf-input" name="${name}" style="font-weight:700;color:${isYes?'#059669':'#DC2626'}">
+        <option value="yes" ${isYes?'selected':''}>YES</option>
+        <option value="no" ${!isYes?'selected':''}>NO</option>
+      </select>
+    </div>`;
+  },
+
   // ═══ COLLECT ALL FORM DATA ═══
   collectFullForm(popup) {
     var body = popup.querySelector('.smf-body');
@@ -430,6 +464,10 @@ const SocietyMasterFull = {
       else if (el.type === 'number') data[el.name] = parseFloat(el.value) || 0;
       else data[el.name] = el.value.trim();
     });
+
+    // Convert YES/NO select fields to booleans
+    const ynFields = ['gstEnabled','hasTAN','hasShareCapital','hasNOC','hasParking','hasSinkingFund','showBankOnBill','printQR'];
+    ynFields.forEach(f => { if (data[f] !== undefined) data[f] = data[f] === 'yes' || data[f] === true; });
 
     // Parse share capital from name field
     var scName = data.sc_name || '';

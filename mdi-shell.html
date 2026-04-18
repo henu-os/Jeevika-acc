@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeevika Accounting — MDI Desktop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/mdi.css">
+</head>
+<body class="mdi-mode">
+
+    <!-- ═══ TOP NAVBAR ═══ -->
+    <nav class="mdi-navbar">
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Master</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/society-master.html', 'Society Master')">Society Master</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/group-master.html', 'Group Master')">Group Master <span class="shortcut">Ctrl+G</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/account-master.html', 'Account Master')">Account Master <span class="shortcut">Ctrl+A</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-master.html', 'Member Master')">Member Master <span class="shortcut">Ctrl+M</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/billing-master.html', 'Billing Master')">Billing Master</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/area-master.html', 'Area Master')">Area Master</div>
+                <div class="mdi-dropdown-sep"></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/opening-bank.html', 'Opening Bank Reco')">Opening Bank Reco</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/opening-balances.html', 'Opening Balances')">Opening Balances</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/bill-print-setup.html', 'Set Bill Printing Option')">Set Bill Printing Option</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/gst-master.html', 'GST Master')">GST Master</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Transaction</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-bill.html', 'Member Bill')">Member Bill</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-receipt.html', 'Member Receipt')">Member Receipt</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/debit-note.html', 'Member Debit Note')">Member Debit Note</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/credit-note.html', 'Member Credit Note')">Member Credit Note</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/cheque-adjustment.html', 'Member Adjustment (Chq.Return)')">Member Adjustment (Chq.Return)</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-journal.html', 'Member Journal')">Member Journal</div>
+                <div class="mdi-dropdown-sep"></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/receipt-voucher.html', 'Receipt')">Receipt <span class="shortcut">Ctrl+I</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/payment-voucher.html', 'Payment')">Payment <span class="shortcut">Ctrl+P</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/contra-voucher.html', 'Contra')">Contra <span class="shortcut">Ctrl+C</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/journal-voucher.html', 'Journal')">Journal</div>
+                <div class="mdi-dropdown-sep"></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/multi-receipt.html', 'Multi Receipt (FlatWise)')">Multi Receipt (FlatWise)</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/multi-receipt.html', 'Multi Receipt (Blank)')">Multi Receipt (Blank)</div>
+                <div class="mdi-dropdown-sep"></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/bank-reconciliation.html', 'Bank Reco')">Bank Reco <span class="shortcut">Ctrl+K</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/quick-note.html', 'Quick Note')">Quick Note</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Member Report</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/bill-print-setup.html', 'Bill Format')">Bill Format <span class="shortcut">Ctrl+B</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-receipt.html', 'Receipt')">Receipt <span class="shortcut">Ctrl+T</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/debit-note.html', 'Debit Note')">Debit Note</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/credit-note.html', 'Credit Note')">Credit Note</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/cheque-adjustment.html', 'Adjustment')">Adjustment</div>
+                <div class="mdi-dropdown-sep"></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/outstanding-list.html', 'Outstanding List')">Outstanding List <span class="shortcut">Ctrl+O</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-ledger.html', 'Member Account')">Member Account <span class="shortcut">Ctrl+E</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/member-register.html', 'Member Register')">Member Register</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/society-account.html', 'Member Control Account')">Member Control Account</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/balance-confirm-letter.html', 'Balance Confirmation Letter')">Balance Confirmation Letter</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Account Report</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/cash-book.html', 'Cash / Bank Book')">Cash / Bank Book</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/account-ledger.html', 'Account Ledger')">Account Ledger</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/trial-balance.html', 'Trial Balance')">Trial Balance</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/income-expenditure.html', 'Income & Expenditure A/c.')">Income & Expenditure A/c.</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/balance-sheet.html', 'Balance Sheet')">Balance Sheet</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/monthly-report.html', 'Monthly Report')">Monthly Report</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Additional Report</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/receipt-voucher.html', 'Receipt Voucher')">Receipt Voucher</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/payment-voucher.html', 'Payment Voucher')">Payment Voucher</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/contra-voucher.html', 'Contra Voucher')">Contra Voucher</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/journal-voucher.html', 'Journal Voucher')">Journal Voucher</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/reports.html', 'Mauli Report')">Mauli Report</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/help.html', 'Whats New in 2025.26')">Whats New in 2025.26</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Utility</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/transfer-members.html', 'Transfer')">Transfer</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/renumber-vouchers.html', 'Renumber')">Renumber</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/utility-bf.html', 'Last Year B/f')">Last Year B/f</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/import-export.html', 'Import Master Data')">Import Master Data</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/group-master.html', 'Defult Group Setting')">Defult Group Setting</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/rebuild-balances.html', 'Rebuild')">Rebuild</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/utility-diff.html', 'Check Difference')">Check Difference</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/utility-ny.html', 'New Year Create')">New Year Create</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/voucher-types.html', 'New Ttran Type')">New Ttran Type</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/select-year.html', 'Select Year')">Select Year</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/utilities.html', 'Calculator')">Calculator <span class="shortcut">Alt+C</span></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/utility-gst.html', 'GST Calculate')">GST Calculate</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Email / Whatsapp</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/email.html', 'Mail to Member')">Mail to Member</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/whatsapp.html', 'Whatsapp to Member')">Whatsapp to Member</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Billing Utility</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/interest-calc.html', 'Interest Zerowise')">Interest Zerowise</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/interest-calc.html', 'Interest Calculate')">Interest Calculate</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/billing-master.html', 'Bill Setting')">Bill Setting</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/billing-master.html', 'Bill Master')">Bill Master</div>
+                <div class="mdi-dropdown-sep"></div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/bill-cancellation.html', 'Bill Cancellation')">Bill Cancellation</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/bill-modification.html', 'Bill Modification')">Bill Modification</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Statutory</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/gst-returns.html', 'GST Returns')">GST Returns</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/tds-compliance.html', 'TDS Compliance')">TDS Compliance</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/it-returns.html', 'IT Returns')">IT Returns</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/society-audit.html', 'Society Audit')">Society Audit</div>
+            </div>
+        </div>
+
+        <div class="mdi-nav-item" onclick="JeevikaMDI.toggleMenu(this)">
+            <strong>Admin</strong>
+            <div class="mdi-dropdown">
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/forms-audit.html', 'Forms & Audit')">Forms & Audit</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/audit-trail.html', 'Audit Trail')">Audit Trail</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/access-security.html', 'Users & Roles')">Users & Roles</div>
+                <div class="mdi-dropdown-item" onclick="JeevikaMDI.openWindow('html/notices.html', 'Notice Board')">Notice Board</div>
+            </div>
+        </div>
+
+        <div style="margin-left: auto; padding-right: 12px; font-weight: 700; color: var(--primary);">
+            Jeevika Accounting ERP
+        </div>
+    </nav>
+
+    <!-- ═══ WINDOWS CONTAINER ═══ -->
+    <div class="mdi-container">
+        <!-- Dashboard opens by default -->
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                JeevikaMDI.openWindow('html/dashboard.html', 'Dashboard — KPIs & Overview', 1200, 800);
+            });
+        </script>
+    </div>
+
+    <!-- ═══ TASKBAR ═══ -->
+    <div class="mdi-taskbar"></div>
+
+    <script src="js/mdi.js"></script>
+</body>
+</html>

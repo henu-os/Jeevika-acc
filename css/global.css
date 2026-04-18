@@ -2,6 +2,8 @@
    JEEVIKA ACCOUNTING — GLOBAL DESIGN SYSTEM
    ════════════════════════════════════════════════ */
 
+@import "sidebar-hover.css";
+
 /* ─── CSS VARIABLES ─── */
 :root {
   /* Brand Colors */
@@ -404,8 +406,8 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 
 /* ─── MODULE GRID ─── */
 .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.module-card { cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
-.module-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.module-card { cursor: pointer; transition: background 0.15s, border-color 0.15s; position: relative; overflow: hidden; }
+.module-card:hover { background: var(--accent-soft); border-color: var(--accent); }
 .module-card .mc-icon {
   width: 48px; height: 48px;
   border-radius: var(--radius-md);
