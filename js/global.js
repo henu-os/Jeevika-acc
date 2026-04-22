@@ -91,11 +91,50 @@ document.querySelectorAll('.sidebar-nav a').forEach(link => {
   }
 });
 
+// ─── SIDEBAR DROPDOWN/ACCORDION ───
+function initSidebarDropdowns() {
+  const page = window.location.pathname.split('/').pop();
+
+  document.querySelectorAll('.nav-group').forEach(group => {
+    const toggle = group.querySelector('.nav-group-toggle');
+    const dropdown = group.querySelector('.nav-dropdown');
+    if (!toggle || !dropdown) return;
+
+    // Auto-open the group containing the active page
+    const activeLink = dropdown.querySelector(`a[href="${page}"]`);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      group.classList.add('open');
+      toggle.classList.add('active');
+    }
+
+    // Click to toggle
+    toggle.addEventListener('click', () => {
+      const isOpen = group.classList.contains('open');
+      // Close all other groups
+      document.querySelectorAll('.nav-group.open').forEach(g => {
+        if (g !== group) {
+          g.classList.remove('open');
+          g.querySelector('.nav-group-toggle')?.classList.remove('active');
+        }
+      });
+      group.classList.toggle('open', !isOpen);
+      toggle.classList.toggle('active', !isOpen);
+    });
+
+    // Keyboard: Enter / Space to toggle
+    toggle.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); }
+    });
+  });
+}
+
 // ─── SIDEBAR TOGGLE (Mobile) ───
 document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.querySelector('.hamburger');
   const sidebar = document.getElementById('sidebar');
   if (hamburger && sidebar) hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
+  initSidebarDropdowns();
 });
 
 // ─── NOTIFICATION DROPDOWN ───
